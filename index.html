@@ -172,8 +172,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在看《CSS揭秘》这本书，平时做笔记都是用OneNote粗略记一些我认为重要的内容，自己看懂了，却有时候不知道怎么把知识说清楚。这次想换个方式输出，一方面想练习一下自己的表达和总结能力，另一方面也可以督促自己的学习。<br><br><br><br>先介绍一下这本书，《CSS揭秘》是由W3C CSS工作组的成员编写的，适合于有一定CSS基础的同学阅读。全篇主要内容包括背景与边框、形状、视觉效果、字体排印、用户体验、结构与布局、过渡与动画七大主题，涵盖了47个鲜为人知的CSS技巧。<br><br><br><br>本文为《CSS揭秘》的第一部分背景与边框的笔记，精要记录了相关经典案例的实现方式和原理，同时在最后附上了个人对此章的一个总结和知识的梳理的脑图，帮助大家承上启下串接和回忆所学内容。</p>
-<h2 id="1-半透明边框"><a href="#1-半透明边框" class="headerlink" title="1.半透明边框"></a>1.半透明边框</h2><p>我们给边框设置成一个半透明色，但默认情况下，背景会延伸到边框所在的区域下层。我们用一个虚线边框样式就可以发现这一点。<br><br></p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在看《CSS揭秘》这本书，平时做笔记都是用OneNote粗略记一些我认为重要的内容，自己看懂了，却有时候不知道怎么把知识说清楚。这次想换个方式输出，一方面想练习一下自己的表达和总结能力，另一方面也可以督促自己的学习。<br><br>先介绍一下这本书，《CSS揭秘》是由W3C CSS工作组的成员编写的，适合于有一定CSS基础的同学阅读。全篇主要内容包括背景与边框、形状、视觉效果、字体排印、用户体验、结构与布局、过渡与动画七大主题，涵盖了47个鲜为人知的CSS技巧。<br><br>本文为《CSS揭秘》的第一部分背景与边框的笔记，精要记录了相关经典案例的实现方式和原理，同时在最后附上了个人对此章的一个总结和知识的梳理的脑图，帮助大家承上启下串接和回忆所学内容。</p>
+<h2 id="1-半透明边框"><a href="#1-半透明边框" class="headerlink" title="1.半透明边框"></a>1.半透明边框</h2><p>我们给边框设置成一个半透明色，但默认情况下，背景会延伸到边框所在的区域下层。我们用一个虚线边框样式就可以发现这一点。</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">border</span>: <span class="number">10px</span> dashed <span class="built_in">hsla</span>(<span class="number">120</span>, <span class="number">50%</span>, <span class="number">50%</span>, <span class="number">0.5</span>);</span><br><span class="line"><span class="attribute">background</span>: yellow;</span><br></pre></td></tr></table></figure>
 <p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/29e8e25d849e4793a1215824eb7903a3~tplv-k3u1fbpfcp-watermark.image" alt="image1.png"><br><br/><br>如果我门要设置一个纯种的半透明边框（不希望背景侵入边框所在的范围），我们要调整<strong>background-clip属性</strong>（默认值是border-box），把其<strong>变为padding-box</strong>。</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">border</span>: <span class="number">10px</span> dashed <span class="built_in">hsla</span>(<span class="number">120</span>, <span class="number">50%</span>, <span class="number">50%</span>, <span class="number">0.5</span>);</span><br><span class="line"><span class="attribute">background</span>: yellow;</span><br><span class="line"><span class="attribute">background-clip</span>: padding-box;</span><br></pre></td></tr></table></figure>
@@ -360,7 +360,7 @@ background-position 属性已经得到扩展，它**允许我们指定背景图�
 
         
         <a href="/2021/06/02/hello-world/" class="archive-article-date">
-  	<time datetime="2021-06-02T09:05:05.235Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-02</time>
+  	<time datetime="2021-06-02T09:10:50.712Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-02</time>
 </a>
         
       </header>
