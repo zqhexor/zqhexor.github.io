@@ -25,6 +25,7 @@ tags: CSS
 
 ## 2.多重边框
 ### box-shadow方案
+
 原理：
 1. box-shadow接收的第四个参数（称作“扩张半径”），通过指定正值或负值，可以让投影面积加大或者减小。一个正值的扩张半径加上两个为零的偏移量以及为零的模糊值，得到的“投影”其实就像一道实线边框；
 2. box-shadow支持逗号分隔语法，因此，我们可以创建任意数量的投影。
@@ -35,8 +36,10 @@ tags: CSS
 ```
 ![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e8ea4927c682419c827586119ef31473~tplv-k3u1fbpfcp-watermark.image)
 <br>
+
 注意事项：
     **box-shadow所创建出的假“边框”出现在元素的外圈。它们并不会响应鼠标事件，比如悬停或点击**。如果这一点非常重要，你可以给**box-shadow 属性加上 inset 关键字，来使投影绘制在元素的内圈**。
+
 ### outline方案
 ```css
     background: yellow;
@@ -46,13 +49,15 @@ tags: CSS
 使用outline的优点：
 1. 可以用它来构造虚线边框；
 2. 可以通过 outline-offset 属性来控制它跟元素边缘之间的间距。
+
 ![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/78fa180b8a764b40a39632ad1c00f9e1~tplv-k3u1fbpfcp-watermark.image)
-<br>
+
 注意事项：
     **outline只适用于双层“边框”的场景，边框不会贴合 border-radius 属性产生的圆角**
     
 ## 3.灵活背景定位
 需求：实现一个背景图片距离目标区域右边20px,下方10px
+
 ### background-position 的扩展语法方案
 background-position 属性已经得到扩展，它**允许我们指定背景图片距离任意角的偏移量，只要我们在偏移量前面指定关键字**。
 ```css
