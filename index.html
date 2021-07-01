@@ -152,6 +152,292 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/07/01/hello-world/">Hello World, HexOr!</a>
+    </h1>
+  
+
+        
+        <a href="/2021/07/01/hello-world/" class="archive-article-date">
+  	<time datetime="2021-07-01T06:56:32.084Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-07-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/07/01/hello-world/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-docker-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/30/docker-1/">Docker学习：从创建一个执行初始化sql脚本的mysql容器开始</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/30/docker-1/" class="archive-article-date">
+  	<time datetime="2021-06-30T09:00:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-30</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>“我的机器上可以运行，为什么你的不可以？？？”</p>
+<p>你可能会经常听见程序员之间出现这样的对话😂~~~</p>
+<p>“芜湖~~~ 我来帮助你们！”Docker🐳突然闪现出来说道。</p>
+<p>“果然，我的机器上也能跑了~”</p>
+<p>“握草，以前搭一天的环境，我5分钟就搞定了。”</p>
+<p>通过上面的对话，我们可以看出Docker的价值。Docker的出现不仅解决了我们运行环境不一致所导致的问题，同时它还可以帮助我们轻松共享我们的工作容器，让他人通过我们共享的容器轻松地创建一个相同功能的容器，节省了我们在环境搭建上所花费的时间🚀。既然Docker这么好用，那我们就开始学习吧！</p>
+<p>本文通过创建一个能执行初始化sql脚本的mysql容器为例，帮助大家学习docker基础知识。文章从环境搭建、常用指令解析然后一步步过渡到实战演练，并最终完成我们的目标。其中实战分为三个部分，从基于基础镜像创建容器，到学会使用卷挂载进行数据共享创建容器，再到基于Dockerfile生成自己的镜像，通过自己的镜像创建容器。最后还介绍了，如何将一个镜像传送到dockerhub仓库供别人使用。</p>
+<p>下图是个人对docker的常用指令的一个总结~</p>
+<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f96d7f7a47bf47b191a0f3f956fba106~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+<p>另外，学习Docker之前，我们还需要了解一点点Linux知识！</p>
+<h2 id="1-环境搭建"><a href="#1-环境搭建" class="headerlink" title="1.环境搭建"></a>1.环境搭建</h2><h4 id="1-安装虚拟机"><a href="#1-安装虚拟机" class="headerlink" title="1. 安装虚拟机"></a>1. 安装虚拟机</h4><p>常用的虚拟机有：VMware Workstation、VirtualBox等，本教程安装的是VMware Workstation。</p>
+<h4 id="2-安装linux系统"><a href="#2-安装linux系统" class="headerlink" title="2. 安装linux系统"></a>2. 安装linux系统</h4><p>下载linux系统镜像，通过镜像安装系统，本教程使用的是Ubuntu镜像。</p>
+<h4 id="3-配置Ubuntu的基础环境"><a href="#3-配置Ubuntu的基础环境" class="headerlink" title="3. 配置Ubuntu的基础环境"></a>3. 配置Ubuntu的基础环境</h4><ul>
+<li>设置root密码：使用以下命令可以设置root密码。<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo passwd</span><br></pre></td></tr></table></figure></li>
+<li>查看系统shell：Ubuntu默认shell采用的是dash，可以用如下命令查看系统的shell。<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -l /bin/sh</span><br></pre></td></tr></table></figure></li>
+<li>切换系统shell：<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg-reconfigure dash</span><br></pre></td></tr></table></figure>
+运行命令，输入root账号的密码后出现如下界面，通过方向键选择No后按下回车，便可完成bash切换。</li>
+</ul>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a177f0bf6e594df3bf7cdb93ba71b767~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+<p>通过上面提到的查看系统shell命令可以查看shell是否切换成bash。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/df49b26dee2d4008b8d690c6e31cb0e7~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+<h4 id="4-安装Docker"><a href="#4-安装Docker" class="headerlink" title="4.安装Docker"></a>4.安装Docker</h4><ul>
+<li>安装curl依赖：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install curl</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安装Docker：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun</span><br></pre></td></tr></table></figure>
+<h2 id="2-镜像"><a href="#2-镜像" class="headerlink" title="2.镜像"></a>2.镜像</h2><p><strong>镜像（Image）</strong>：好比是一个只读的模板，而作为一名程序员，则可以将镜像理解为类。</p>
+<h4 id="1-搜索镜像：docker-search-镜像名"><a href="#1-搜索镜像：docker-search-镜像名" class="headerlink" title="1.搜索镜像：docker search 镜像名"></a>1.搜索镜像<span id="search"></span>：<code>docker search 镜像名</code></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search imageName</span><br></pre></td></tr></table></figure>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a16629f4b3414db0abd03dcc93c8b0cb~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+<h4 id="2-拉取-推送镜像：docker-pull-push-镜像名"><a href="#2-拉取-推送镜像：docker-pull-push-镜像名" class="headerlink" title="2.拉取/推送镜像：docker pull/push 镜像名"></a>2.拉取/推送镜像<span id="pull"></span>：<code>docker pull/push 镜像名</code></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull NAME:TAG</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-查看镜像：-docker-images-镜像名"><a href="#3-查看镜像：-docker-images-镜像名" class="headerlink" title="3.查看镜像： docker images [镜像名]"></a>3.查看镜像<span id="images"></span>： <code>docker images [镜像名]</code></h4><p>镜像名是可选参数，表示按名称过滤。</p>
+<p>使用以下命令可查看本地已下载的所有镜像。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/33183267bd054cb1891662d2188590e7~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+<h4 id="4-删除镜像：-docker-rmi-镜像名-镜像ID"><a href="#4-删除镜像：-docker-rmi-镜像名-镜像ID" class="headerlink" title="4.删除镜像： docker rmi [镜像名/镜像ID...]"></a>4.删除镜像<span id="rmi"></span>： <code>docker rmi [镜像名/镜像ID...]</code></h4><p>该命令可以删除多个镜像，多个镜像之间用空格隔开。</p>
+<p>使用以下命令可删除所有镜像。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi -f $(docker image ls)</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-使用-Dockerfile-创建镜像：-docker-build-t-镜像名-f-Dockerfile路径"><a href="#5-使用-Dockerfile-创建镜像：-docker-build-t-镜像名-f-Dockerfile路径" class="headerlink" title="5.使用 Dockerfile 创建镜像： docker build -t 镜像名 -f Dockerfile路径 ."></a>5.使用 Dockerfile 创建镜像<span id="build"></span>： <code>docker build -t 镜像名 -f Dockerfile路径 .</code></h4><p>-f :指定要使用的Dockerfile的路径，不使用此可选参数，则使用当前目录下的Dockerfile创建镜像；</p>
+<p>-t，-tag: 镜像的名字及标签，通常 name:tag 或者 name 格式；可以在一次构建中为一个镜像设置多个标签；</p>
+<p>不要忘记最后的.哦~~~</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t NAME:TAG -f Dockerfile路径 .</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-通过容器生成镜像：-docker-commit-容器id-镜像名"><a href="#6-通过容器生成镜像：-docker-commit-容器id-镜像名" class="headerlink" title="6.通过容器生成镜像： docker commit 容器id 镜像名"></a>6.通过容器生成镜像<span id="commit"></span>： <code>docker commit 容器id 镜像名</code></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker commit containerId imageNAME</span><br></pre></td></tr></table></figure>
+<h4 id="7-重命名镜像：-docker-tag-源镜像Tag-目标镜像Tag"><a href="#7-重命名镜像：-docker-tag-源镜像Tag-目标镜像Tag" class="headerlink" title="7.重命名镜像： docker tag 源镜像Tag 目标镜像Tag"></a>7.重命名镜像<span id="tag"></span>： <code>docker tag 源镜像Tag 目标镜像Tag</code></h4><p>给本地镜像打一个标记（tag），可将其归入某一仓库。打了新的 TAG 虽然会多了一条记录，但是 IMAGE ID 不会变，他们还是同一个镜像。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag 源镜像Tag 目标镜像Tag`</span><br></pre></td></tr></table></figure>
+<h2 id="3-容器"><a href="#3-容器" class="headerlink" title="3.容器"></a>3.容器</h2><p><strong>容器（Container）</strong>：基于镜像创建的, 独立运行的一个或一组应用，可以看成是镜像运行时的实体。容器可以被创建、启动、停止、删除等。</p>
+<h4 id="1-创建并运行容器：docker-run-itd-name-容器名-p-主机-宿主-端口-容器端口-v-主机文件路径-容器文件路径-e-环境变量-镜像名"><a href="#1-创建并运行容器：docker-run-itd-name-容器名-p-主机-宿主-端口-容器端口-v-主机文件路径-容器文件路径-e-环境变量-镜像名" class="headerlink" title="1.创建并运行容器：docker run -itd --name 容器名 -p 主机(宿主)端口:容器端口 -v 主机文件路径:/容器文件路径 -e 环境变量 镜像名"></a>1.创建并运行容器<span id="run"></span>：<code>docker run -itd --name 容器名 -p 主机(宿主)端口:容器端口 -v 主机文件路径:/容器文件路径 -e 环境变量 镜像名</code></h4><p>-i: 以交互模式运行容器，通常与 -t 同时使用。</p>
+<p>-t: 为容器重新分配一个伪输入终端，通常与 -i 同时使用。</p>
+<p>-d: 后台运行容器，并返回容器ID。</p>
+<p>–name 容器名: 为容器指定一个名称。</p>
+<p>-p 主机(宿主)端口:容器端口：指定端口映射。</p>
+<p>-v 主机文件路径:/容器文件路径:绑定一个卷，也就是将容器内的某个文件或者某个文件夹绑定到宿主机的某个文件或者文件夹，卷不仅共享，而且同步，修改其中任意一个卷，另外的卷立马作出相应变化。</p>
+<p>-e 环境变量: 设置环境变量。</p>
+<p>镜像名: 基于哪个镜像创建的。</p>
+<p>注意：如果只创建不运行容器的话，可以用create命令代替run命令，create命令的参数和run一样，之后可以通过start命令启动。</p>
+<h4 id="2-启动-停止-重启：docker-start-stop-restart-容器名-容器id"><a href="#2-启动-停止-重启：docker-start-stop-restart-容器名-容器id" class="headerlink" title="2.启动/停止/重启：docker start/stop/restart 容器名/容器id"></a>2.启动/停止/重启<span id="start"></span>：<code>docker start/stop/restart 容器名/容器id</code></h4><h4 id="3-查看所有容器：docker-ps-a"><a href="#3-查看所有容器：docker-ps-a" class="headerlink" title="3.查看所有容器：docker ps -a"></a>3.查看所有容器<span id="ps"></span>：<code>docker ps -a</code></h4><p>通过以上命令返回如下信息。</p>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cc591c0e143f4787b0c8962973e4b89f~tplv-k3u1fbpfcp-watermark.image" alt="image.png"><br>返回信息详情介绍如下：</p>
+<p>CONTAINER ID: 容器 ID。</p>
+<p>IMAGE: 使用的镜像。</p>
+<p>COMMAND: 启动容器时运行的命令。</p>
+<p>CREATED: 容器的创建时间。</p>
+<p>STATUS: 容器状态。状态有7种：created（已创建）<br>restarting（重启中）<br>running（运行中）<br>removing（迁移中）<br>paused（暂停）<br>exited（停止）<br>dead（死亡）。</p>
+<p>PORTS: 容器的端口信息和使用的连接类型（tcp\udp）。</p>
+<p>NAMES: 自动分配的容器名称。</p>
+<h4 id="4-查看容器日志-docker-logs-f-tail-行数-容器名-容器id"><a href="#4-查看容器日志-docker-logs-f-tail-行数-容器名-容器id" class="headerlink" title="4.查看容器日志:docker logs -f --tail 行数 容器名/容器id"></a>4.查看容器日志<span id="logs"></span>:<code>docker logs -f --tail 行数 容器名/容器id</code></h4><p>-f：跟踪实时日志。</p>
+<p>–tail 行数：从日志末尾显示多少行日志， 默认是all。</p>
+<h4 id="5-删除容器-docker-rm-容器名-容器id"><a href="#5-删除容器-docker-rm-容器名-容器id" class="headerlink" title="5.删除容器:docker rm 容器名/容器id"></a>5.删除容器<span id="rm"></span>:<code>docker rm 容器名/容器id</code></h4><p>注意： <strong>删除容器前，需先停止容器。</strong></p>
+<h4 id="6-进入容器内部-docker-exec-it-容器名-容器id-bash"><a href="#6-进入容器内部-docker-exec-it-容器名-容器id-bash" class="headerlink" title="6.进入容器内部:docker exec -it 容器名/容器id bash"></a>6.进入容器内部<span id="exec"></span>:<code>docker exec -it 容器名/容器id bash</code></h4><p>可以在<a href="#run">创建并启动容器的命令</a>后也加上bash，从而达到容器启动后直接进入容器的目的。</p>
+<h4 id="7-退出容器-exit"><a href="#7-退出容器-exit" class="headerlink" title="7.退出容器:exit"></a>7.退出容器<span id="exit"></span>:<code>exit</code></h4><p>使用exit命令可从容器内部退出。</p>
+<h2 id="4-Dockerfile常用指令"><a href="#4-Dockerfile常用指令" class="headerlink" title="4.Dockerfile常用指令"></a>4.Dockerfile常用指令<span id="Dockerfile"></span></h2><p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e979565927944b6a8c07dafc146eb15e~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+<h4 id="RUN、CMD、ENTRYPOINT的对比"><a href="#RUN、CMD、ENTRYPOINT的对比" class="headerlink" title="RUN、CMD、ENTRYPOINT的对比"></a>RUN、CMD、ENTRYPOINT的对比</h4><p>RUN 指令是在容器被构建时运行的命令；CMD 、 ENTRYPOINT 是启动容器时执行 shell 命令。</p>
+<p>CMD  会被 docker run 命令覆盖，但是  ENTRYPOINT 不会被覆盖。事实上，docker run 命令指定的任何参数都会被当作参数再次传递给 ENTRYPOINT 指令。CMD 、 ENTRYPOINT 两个指令之间也可以一起使用。</p>
+<h4 id="AND、COPY的对比"><a href="#AND、COPY的对比" class="headerlink" title="AND、COPY的对比"></a>AND、COPY的对比</h4><p>ADD 、 COPY 指令用法一样，唯一不同的是 ADD 支持将归档文件（tar, gzip, bzip2, etc）做提取和解压操作。注意的是，COPY 指令需要复制的目录一定要放在 Dockerfile 文件的同级目录下</p>
+<h2 id="5-实战演练：docker容器方式启动一个mysql"><a href="#5-实战演练：docker容器方式启动一个mysql" class="headerlink" title="5.实战演练：docker容器方式启动一个mysql"></a>5.实战演练：docker容器方式启动一个mysql</h2><p>本栗子演示基于mysql:5.7镜像创建并运行mysql的过程。<br>首先我们输入命令 <code>su</code>，然后输入root账户的密码，将用户切至root账户，这样可避免我们在docker命令前加sudo，使我们接下来的操作更加便捷。</p>
+<h3 id="1-搭建基础版mysql"><a href="#1-搭建基础版mysql" class="headerlink" title="1.搭建基础版mysql"></a>1.搭建基础版mysql</h3><p>首先我们基于mysq:5.7镜像生成一个空数据库。</p>
+<p><a href="#search">搜索镜像</a>：搜索mysql:5.7的镜像，命令如下：</p>
+<figure class="highlight docker"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker search mysql:<span class="number">5.7</span></span><br></pre></td></tr></table></figure>
+<p><a href="#pull">拉取镜像</a>：拉取mysql:5.7的镜像到本地，命令如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql:5.7</span><br></pre></td></tr></table></figure>
+
+<p><a href="#run">创建并运行容器</a>：创建并启动了一个基于mysql:5.7镜像创建的且容器名为mysql-test的mysql应用，这个mysql应用root账号的初始密码是123456，暴露的端口为3306，命令如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd --name mysql-test -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql:5.7</span><br></pre></td></tr></table></figure>
+<p><a href="#ps">查看容器转态</a>：通过以下命令，我们可以查看所有容器的状态</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cc591c0e143f4787b0c8962973e4b89f~tplv-k3u1fbpfcp-watermark.image" alt="image.png"><br>在status栏我们可以看出容器已运行两分钟。</p>
+<p>我们也可以用mysql连接工具来测试一下这个mysql应用是否正常运行。首先通过 <code>ifconfig</code> 命令查出宿主机的ip，然后输入端口为3306，账号为root，密码为123456进行测试。</p>
+<h3 id="2-使用挂载卷创建并运行一个有初始化数据的mysql"><a href="#2-使用挂载卷创建并运行一个有初始化数据的mysql" class="headerlink" title="2.使用挂载卷创建并运行一个有初始化数据的mysql"></a>2.使用挂载卷创建并运行一个有初始化数据的mysql</h3><p>我们连接上容器内的mysql，然后可以创建一个数据库，并在其中建一些表和数据，最后导出成sql脚本，此处案例导出的脚本文件名为test.sql。</p>
+<p>接下来，我们需思考怎样让创建容器的时候同时运行这个初始化脚本呢？</p>
+<p>我们通过以下命令<a href="#exec">进入容器</a>（mysql-test）内部：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it mysql-test bash</span><br></pre></td></tr></table></figure>
+<p>然后输入命令<code> ls -al</code>，查看容器中的目录及文件</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a389e5efb8dc408b9ffd452d39eaf28b~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+<p>我们发现容器中有一个/<strong>docker-entrypoint-initdb.d</strong> 目录, <strong>此目录可用于执行初始化脚本, 且执行顺序是按照文件名字母顺序执行</strong>。 因此我们<strong>只要挂载一个宿主机目录到容器中目录 /docker-entrypoint-initdb.d</strong>，然后<strong>在挂载宿主机目录中添加自己的初始化脚本</strong>即可。 执行一次的保证是，容器启动会检查/var/lib/mysql 目录下是否有数据，如果mysql不是第一次启动，那么该文件夹下就有数据，/docker-entrypoint-initdb.d 目录中脚本就不会执行；如果mysql第一次启动，由于没有数据，所以/var/lib/mysql内容为空，初始化脚本就会执行。当然，由于/var/lib/mysql 目录一般是挂载在宿主机器上的，所以清空该目录也可触发初始化脚本执行。</p>
+<p>接下来我们删除该容器，创建一个同名的mysql-test容器，然后通过添加挂载卷参数启动容器。</p>
+<p>首先我们通过 <code>exit</code> 命令退出容器。</p>
+<p>接下来我们在删除容器之前需要用<a href="#start">停止容器</a>命令，停止mysql-test容器，命令如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop mysql-test</span><br></pre></td></tr></table></figure>
+<p>然后再通过<a href="#rm">删除容器</a>命令，删除mysql-test容器，命令如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm mysql-test</span><br></pre></td></tr></table></figure>
+<p>紧接着我们通过 <code>cd /home</code> 命令，将目录切到/home，我们在该目录下创建出一个 /home/mysql/init-data 的目录，然后将test.sql文件复制到该目录下，准备好宿主目录，我们接下来使用<a href="#run">创建并运行容器</a>命令，创建并启动了一个基于mysql:5.7镜像创建的且容器名为mysql-test的mysql应用，这个mysql应用root账号的初始密码是123456，暴露的端口为3306，并将宿主机上/home/mysql/init-data/下的文件挂载到了容器内的/docker-entrypoint-initdb.d目录下，命令如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd --name mysql-test -p 3306:3306 -v /home/mysql/init-data/:/docker-entrypoint-initdb.d -e MYSQL_ROOT_PASSWORD=123456 mysql:5.7</span><br></pre></td></tr></table></figure>
+<p>我们通过以下命令<a href="#exec">进入容器</a>（mysql-test）内部：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it mysql-test bash</span><br></pre></td></tr></table></figure>
+<p>然后切至/docker-entrypoint-initdb.d目录下，发现该目录下存在test.sql文件，说明文件挂载成功。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/647c6d0b2a14416f99d44f68387c81d3~tplv-k3u1fbpfcp-watermark.image" alt="image.png"><br>通过用mysql连接工具，进入mysql应用内部，发现数据库中的表和数据均初始化。</p>
+<h3 id="3-通过Dockerfile重新打包镜像，创建并运行一个有初始化数据的mysql"><a href="#3-通过Dockerfile重新打包镜像，创建并运行一个有初始化数据的mysql" class="headerlink" title="3.通过Dockerfile重新打包镜像，创建并运行一个有初始化数据的mysql"></a>3.通过Dockerfile重新打包镜像，创建并运行一个有初始化数据的mysql</h3><p>我们一个启动命令这么复杂，我们能不能简化启动命令，把一些固定的东西交给脚本去做了？</p>
+<p>这里我就使用Dockerfile脚本打包成新的镜像，然后基于新的镜像，创建一个mysql容器。</p>
+<p>首先我们通过<code>cd /home</code>切换至/home目录下，在该目录下创建Dockerfile目录，同时在Dockerfile目录下新建一个<a href="#Dockerfile">Dockerfile</a>文件，然后在文件里写入如下脚本。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FROM mysql:5.7</span><br><span class="line">ENV MYSQL_ROOT_PASSWORD=123456</span><br><span class="line">COPY ./init-data /docker-entrypoint-initdb.d</span><br></pre></td></tr></table></figure>
+<p>这里我们采用COPY命令将宿主机器Dockerfile目录下的init-data文件夹下的文件（因此我们还需在Dockerfile目录下创建一个init-data文件夹，将test.sql放入其中）复制到容器的/docker-entrypoint-initdb.d文件夹下，不用卷挂载是由于Dockerfile脚本只支持匿名挂载。</p>
+<p>于是我们通过<a href="#build">Dockerfile生成镜像命令</a>，生成一个新的镜像，这里我们取名镜像为mysql:v1，命令如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t mysql:v1 .</span><br></pre></td></tr></table></figure>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e9bc13ca2c634276ae84db9e17a33ea1~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+<p>镜像生成成功后，我们可以通过<a href="#images">查看镜像命令</a>，查看镜像状态，命令如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1a59167811e8413daa53fb55796536dc~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+<p>接下我们就可以基于mysql:v1镜像，<a href="#run">创建并运行一个容器</a>mysql-test1，此时我们创建的容器就不需要带入环境变量和卷挂载参数了，命令如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd --name mysql-test1 -p 3306:3306 mysql:v1</span><br></pre></td></tr></table></figure>
+<p>我们这个容器mysql-test1同样也实现了mysql数据库的初始化。</p>
+<h2 id="6-上传镜像到dockerhub"><a href="#6-上传镜像到dockerhub" class="headerlink" title="6.上传镜像到dockerhub"></a>6.上传镜像到dockerhub</h2><p>最后我们将mysql:v1镜像上传到dockerhub。<br>首先我们得在<a target="_blank" rel="noopener" href="https://hub.docker.com/">dockerhub</a>上注册一个账号，然后我们通过以下命令进行登录。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker login</span><br></pre></td></tr></table></figure>
+<p>输入用户和密码后，提示登录成功。<br>然后我们再用<code>docker push</code>命令将镜像推送至仓库。但是推送至dockerhub的镜像是有规范的，规范是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker push 注册用户名/镜像名</span><br></pre></td></tr></table></figure>
+<p>于是我们先需要用<a href="#tag"><code>docker tag</code>命令</a>将mysql:v1镜像改名，命令如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag mysql:v1 zqhexor/mysql:v1</span><br></pre></td></tr></table></figure>
+<p>改名完成后，我们就可以使用<code>docker push</code>命令，将镜像推送至dockerhub仓库。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker push zqhexor/mysql:v1</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adf5cb4f4ea44b0da31d4583a3d1bcfc~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+<p>推送成功后，我们可以在dockerhub中看到我们上传的镜像。</p>
+<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6d64ec5d2f974313b7e71194eebda2a5~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+<p>完结~👻</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CSS</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/30/docker-1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-css-code2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -365,81 +651,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2021/06/23/css-code2/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/23/hello-world/">Hello World, HexOr!</a>
-    </h1>
-  
-
-        
-        <a href="/2021/06/23/hello-world/" class="archive-article-date">
-  	<time datetime="2021-06-23T02:14:00.326Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-23</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/23/hello-world/">展开全文 >></a>
         </p>
       
 
