@@ -587,5 +587,3 @@ svg {
 ![image.png](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/71e1326ce9ae4756979d31f230d2262f~tplv-k3u1fbpfcp-watermark.image)
 
 通过三种生成饼图的方案，可以看出：svg方案和conic-gradient方案代码简洁，且能轻松实现多种颜色的饼图，非常值得推荐~
-
-
