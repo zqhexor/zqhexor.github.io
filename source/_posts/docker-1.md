@@ -1,7 +1,7 @@
 ---
 title: Docker学习：从创建一个执行初始化sql脚本的mysql容器开始
 date: 2021-06-30 09:00:03
-tags: CSS
+tags: docker
 ---
 ## 前言
 
