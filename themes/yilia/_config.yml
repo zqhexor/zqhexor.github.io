@@ -6,7 +6,7 @@ menu:
 
 # SubNav
 subnav:
-  github: "#"
+  github: "https://github.com/zqhexor"
   weibo: "#"
   rss: "#"
   zhihu: "#"
@@ -120,7 +120,7 @@ smart_menu:
   aboutme: '关于我'
 
 friends:
-  友情链接1: http://localhost:4000/
+  掘金博客: https://juejin.cn/user/3500492880358429/
   友情链接2: http://localhost:4000/
   友情链接3: http://localhost:4000/
   友情链接4: http://localhost:4000/
