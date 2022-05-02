@@ -1,6 +1,6 @@
 ---
 title: qiankun微前端应用于vue应用的实践
-date: 2022-05-03 01:50:00
+date: 2021-09-01 16:28:00
 tags: qiankun
 ---
 
