@@ -6,24 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Vue3中watch的最佳实践 | Hexor&#39;s Blog</title>
+  <title>docker发布一个springboot工程 | Hexor&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言🌟本文诣在帮大家彻底梳理Vue3中watch的用法。 首先，介绍Vue3的watch API的基本使用，然后介绍了watch在侦听单个数据源、多个数据源的注意事项，最后通过对比得出watch侦听引用类型数据源的最佳实践。 一、API介绍123456789watch(WatcherSource, Callback, [WatchOptions])type WatcherSource&lt;T&amp;">
+  <meta name="description" content="前言✨本文介绍如何使用docker发布一个springboot工程到腾讯云 一、搭建mysql数据库1.拉取mysql镜像1docker pull mysql8.0.0 2.启动mysql1docker run -p 3306:3306 --name mysql-1 --privileged&#x3D;true --restart unless-stopped -v &#x2F;opt&#x2F;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Vue3中watch的最佳实践">
-<meta property="og:url" content="http://yoursite.com/2022/05/03/Vue3%E4%B8%ADwatch%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/index.html">
+<meta property="og:title" content="docker发布一个springboot工程">
+<meta property="og:url" content="http://yoursite.com/2022/03/07/docker%E5%8F%91%E5%B8%83%E4%B8%80%E4%B8%AAspringboot%E5%B7%A5%E7%A8%8B/index.html">
 <meta property="og:site_name" content="Hexor&#39;s Blog">
-<meta property="og:description" content="前言🌟本文诣在帮大家彻底梳理Vue3中watch的用法。 首先，介绍Vue3的watch API的基本使用，然后介绍了watch在侦听单个数据源、多个数据源的注意事项，最后通过对比得出watch侦听引用类型数据源的最佳实践。 一、API介绍123456789watch(WatcherSource, Callback, [WatchOptions])type WatcherSource&lt;T&amp;">
+<meta property="og:description" content="前言✨本文介绍如何使用docker发布一个springboot工程到腾讯云 一、搭建mysql数据库1.拉取mysql镜像1docker pull mysql8.0.0 2.启动mysql1docker run -p 3306:3306 --name mysql-1 --privileged&#x3D;true --restart unless-stopped -v &#x2F;opt&#x2F;">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dec6f535d99c43a68dfa2e6ed2f70de4~tplv-k3u1fbpfcp-watermark.image">
-<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b3d80d39224a4531af9e2c62dab4ea5c~tplv-k3u1fbpfcp-watermark.image">
-<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/983875649e7f4527bd520d801d14b586~tplv-k3u1fbpfcp-watermark.image">
-<meta property="article:published_time" content="2022-05-03T01:26:55.000Z">
-<meta property="article:modified_time" content="2022-05-02T17:53:48.385Z">
+<meta property="article:published_time" content="2022-03-07T01:41:18.000Z">
+<meta property="article:modified_time" content="2022-05-02T18:02:32.613Z">
 <meta property="article:author" content="HexOr">
-<meta property="article:tag" content="vue3">
+<meta property="article:tag" content="docker">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dec6f535d99c43a68dfa2e6ed2f70de4~tplv-k3u1fbpfcp-watermark.image">
   
     <link rel="alternative" href="/atom.xml" title="Hexor&#39;s Blog" type="application/atom+xml">
   
@@ -159,71 +155,62 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Vue3中watch的最佳实践" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-docker发布一个springboot工程" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Vue3中watch的最佳实践
+      docker发布一个springboot工程
     </h1>
   
 
         
-        <a href="/2022/05/03/Vue3%E4%B8%ADwatch%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" class="archive-article-date">
-  	<time datetime="2022-05-03T01:26:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-05-03</time>
+        <a href="/2022/03/07/docker%E5%8F%91%E5%B8%83%E4%B8%80%E4%B8%AAspringboot%E5%B7%A5%E7%A8%8B/" class="archive-article-date">
+  	<time datetime="2022-03-07T01:41:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-07</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="前言🌟"><a href="#前言🌟" class="headerlink" title="前言🌟"></a>前言🌟</h1><p>本文诣在帮大家彻底梳理<code>Vue3</code>中<code>watch</code>的用法。</p>
-<p>首先，介绍<code>Vue3</code>的<code>watch</code> API的基本使用，然后介绍了<code>watch</code>在侦听单个数据源、多个数据源的注意事项，最后通过对比得出watch侦听<code>引用类型数据源</code>的最佳实践。</p>
-<h1 id="一、API介绍"><a href="#一、API介绍" class="headerlink" title="一、API介绍"></a>一、API介绍</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">watch(WatcherSource, Callback, [WatchOptions])</span><br><span class="line"></span><br><span class="line">type WatcherSource&lt;T&gt; = Ref&lt;T&gt; | (<span class="function">() =&gt;</span> T) </span><br><span class="line"></span><br><span class="line">interface WatchOptions <span class="keyword">extends</span> WatchEffectOptions &#123;</span><br><span class="line">    deep?: boolean <span class="comment">// 默认：false </span></span><br><span class="line">    immediate?: boolean <span class="comment">// 默认：false </span></span><br><span class="line">    flush?: string <span class="comment">// 默认：&#x27;pre&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>参数说明：</p>
-<p>WatcherSource: 用于指定要侦听的响应式数据源。侦听器数据源可以是返回值的 <code>getter</code> 函数，也可以直接是 <code>ref</code>。</p>
-<p>Callback: 执行的回调函数，可<strong>依次接收当前值newValue，先前值oldValue</strong>作为入参。</p>
-<p>WatchOptions：<code>deep</code>、<code>immediate</code>、<code>flush</code>可选。</p>
+        <h1 id="前言✨"><a href="#前言✨" class="headerlink" title="前言✨"></a>前言✨</h1><p>本文介绍如何使用docker发布一个springboot工程到腾讯云</p>
+<h1 id="一、搭建mysql数据库"><a href="#一、搭建mysql数据库" class="headerlink" title="一、搭建mysql数据库"></a>一、搭建mysql数据库</h1><h2 id="1-拉取mysql镜像"><a href="#1-拉取mysql镜像" class="headerlink" title="1.拉取mysql镜像"></a>1.拉取mysql镜像</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql8.0.0</span><br></pre></td></tr></table></figure>
+<h2 id="2-启动mysql"><a href="#2-启动mysql" class="headerlink" title="2.启动mysql"></a>2.启动mysql</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 3306:3306 --name mysql-1 --privileged&#x3D;true --restart unless-stopped -v &#x2F;opt&#x2F;mysql_docker&#x2F;logs:&#x2F;logs -v &#x2F;opt&#x2F;mysql_docker&#x2F;localtime -e MYSQL_ROOT_PASSWORD&#x3D;123456 -itd mysql:8.0.0</span><br></pre></td></tr></table></figure>
+<p>–privileged=true 挂载文件权限设置</p>
+<p>–restart unless-stopped 设置 开机后自动重启容器</p>
+<p>-v /opt/mysql_docker/logs:/logs 挂载日志</p>
+<p>-v /etc/localtime:/etc/localtime 容器时间与宿主机同步</p>
+<p>-e MYSQL_ROOT_PASSWORD=123456 设置密码</p>
+<p>-itd mysql:8.0.0 后台启动,mysql</p>
+<p>-v /opt/mysql_docker/mysql:/etc/mysql 挂载配置文件</p>
+<p>-v /opt/mysql_docker/data:/var/lib/mysql 挂载数据文件 持久化到主机</p>
+<h2 id="3-修改mysql的密码"><a href="#3-修改mysql的密码" class="headerlink" title="3.修改mysql的密码"></a>3.修改mysql的密码</h2><p><strong>注意：腾讯云安全组默认不添加开放 3306 端口，需要手动添加，才能连接远程工具</strong></p>
+<p><strong>另外，当远程工具不能连接时，需按下面的操作更改加密规则为：<code>mysql_native_password</code></strong></p>
+<ol>
+<li>进入容器内部<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it mysql-1 bash</span><br></pre></td></tr></table></figure></li>
+<li>输入用户名<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure></li>
+<li>修改密码<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">use mysql;</span><br><span class="line">select host,user,plugin from user;</span><br><span class="line">alter user &#39;root&#39;@&#39;%&#39; identified with mysql_native_password by &#39;123456&#39;;</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h1 id="二、创建后端镜像并启动"><a href="#二、创建后端镜像并启动" class="headerlink" title="二、创建后端镜像并启动"></a>二、创建后端镜像并启动</h1><ul>
+<li>方式一：通过–link<h2 id="1-打包springboot工程并上传"><a href="#1-打包springboot工程并上传" class="headerlink" title="1.打包springboot工程并上传"></a>1.打包springboot工程并上传</h2></li>
+</ul>
+<ol>
+<li>将关联的数据库<code>ip地址</code>改成<code>别名</code>（后面会提到），以下把ip改成了emysql<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spring.datasource.url&#x3D;jdbc:mysql:&#x2F;&#x2F;emysql:3306&#x2F;music?serverTimezone&#x3D;Asia&#x2F;Shanghai&amp;useUnicode&#x3D;true&amp;characterEncoding&#x3D;utf8&amp;useSSL&#x3D;false</span><br></pre></td></tr></table></figure></li>
+<li>然后用maven对数据库进行package打包，然后上传至腾讯云</li>
+</ol>
+<h2 id="2-编写Dockerfile并打包镜像"><a href="#2-编写Dockerfile并打包镜像" class="headerlink" title="2.编写Dockerfile并打包镜像"></a>2.编写Dockerfile并打包镜像</h2><ol>
+<li>Dockerfile配置如下：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FROM java:8</span><br><span class="line">EXPOSE 8090</span><br><span class="line"></span><br><span class="line">VOLUME &#x2F;tmp</span><br><span class="line"></span><br><span class="line">ADD music-1.0-SNAPSHOT.jar &#x2F;app.jar</span><br><span class="line">ENTRYPOINT [&quot;java&quot;,&quot;-jar&quot;,&quot;&#x2F;app.jar&quot;]</span><br></pre></td></tr></table></figure></li>
+<li>然后通过以下命令打包镜像<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t music .</span><br></pre></td></tr></table></figure>
+<h2 id="3-启动镜像"><a href="#3-启动镜像" class="headerlink" title="3.启动镜像"></a>3.启动镜像</h2>通过<code>--link</code>命令连接mysql-1容器并取别名为emysql(用于上述提到的数据库地址配置)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 8090:8090 --name music --link mysql-1:emysql -d music</span><br></pre></td></tr></table></figure></li>
+</ol>
 <ul>
-<li>当需要对响应式对象进行深度监听时，设置<code>deep: true</code>。</li>
-<li>默认情况下watch是惰性的，当我们<strong>设置<code>immediate: true</code>时，watch会在初始化时立即执行回调函数</strong>。<ul>
-<li><code>flush</code> 选项可以更好地控制回调的时间。它可设置为 <code>pre</code>、<code>post</code> 或 <code>sync</code>。</li>
-<li>默认值是 <code>pre</code>，指定的回调应该在<strong>渲染前</strong>被调用。</li>
-<li><code>post</code> 值是可以用来将回调推迟到<strong>渲染之后</strong>的。如果回调需要通过 <code>$refs</code> 访问更新的 DOM 或子组件，那么则使用该值。</li>
-<li>如果 <code>flush</code> 被设置为 <code>sync</code>，一旦值发生了变化，回调将被<strong>同步</strong>调用（<strong>少用，影响性能</strong>）。</li>
+<li>方式二：docker-compose方案：</li>
 </ul>
-</li>
-</ul>
-<h1 id="二、侦听单个数据源及停止侦听"><a href="#二、侦听单个数据源及停止侦听" class="headerlink" title="二、侦听单个数据源及停止侦听"></a>二、侦听单个数据源及停止侦听</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">  <span class="keyword">import</span> &#123; watch, ref, reactive &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line">  <span class="comment">// 侦听一个 getter</span></span><br><span class="line">  <span class="keyword">const</span> person = reactive(&#123;<span class="attr">name</span>: <span class="string">&#x27;小松菜奈&#x27;</span>&#125;)</span><br><span class="line">  watch(</span><br><span class="line">    () =&gt; person.name,</span><br><span class="line">    (value, oldValue) =&gt; &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(value, oldValue)</span><br><span class="line">    &#125;, &#123;<span class="attr">immediate</span>:<span class="literal">true</span>&#125;</span><br><span class="line">  )</span><br><span class="line">  person.name = <span class="string">&#x27;有村架纯&#x27;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 直接侦听ref</span></span><br><span class="line">  <span class="keyword">const</span> ageRef = ref(<span class="number">16</span>)</span><br><span class="line">  <span class="keyword">const</span> stopAgeWatcher = watch(ageRef, <span class="function">(<span class="params">value, oldValue</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(value, oldValue)</span><br><span class="line">    <span class="keyword">if</span> (value &gt; <span class="number">18</span>) &#123;</span><br><span class="line">      stopAgeWatcher() <span class="comment">// 当ageRef大于18，停止侦听</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> changeAge = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    ageRef.value += <span class="number">1</span></span><br><span class="line">  &#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dec6f535d99c43a68dfa2e6ed2f70de4~tplv-k3u1fbpfcp-watermark.image" alt="未标题-3.gif"></p>
-<p>现象：配置了<code>immediate:true</code>的<code>watch</code>，在初始化时触发了一次<code>watch</code>的回调。我们连续点击增加年龄，当年龄的当前值大于18时，watch停止了侦听。</p>
-<p><strong>结论</strong>：侦听器数据源可以是返回值的 <code>getter</code> 函数，也可以直接是 <code>ref</code>。我们可以利用给<code>watch</code>函数取<code>名字</code>，然后通过执行<code>名字()</code>函数来停止侦听。</p>
-<h1 id="三、监听多个数据源"><a href="#三、监听多个数据源" class="headerlink" title="三、监听多个数据源"></a>三、监听多个数据源</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line">  <span class="keyword">import</span> &#123;ref, watch, nextTick&#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> name = ref(<span class="string">&#x27;小松菜奈&#x27;</span>)</span><br><span class="line">  <span class="keyword">const</span> age = ref(<span class="number">25</span>)</span><br><span class="line"></span><br><span class="line">  watch([name, age], <span class="function">(<span class="params">[name, age], [prevName, prevAge]</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;newName&#x27;</span>, name, <span class="string">&#x27;oldName&#x27;</span>, prevName)</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;newAge&#x27;</span>, age, <span class="string">&#x27;oldAge&#x27;</span>, prevAge)</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 如果你在同一个函数里同时改变这些被侦听的来源，侦听器只会执行一次</span></span><br><span class="line">  <span class="keyword">const</span> change1 = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    name.value = <span class="string">&#x27;有村架纯&#x27;</span></span><br><span class="line">    age.value += <span class="number">2</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 用 nextTick 等待侦听器在下一步改变之前运行,侦听器执行了两次</span></span><br><span class="line">  <span class="keyword">const</span> change2 = <span class="keyword">async</span> () =&gt; &#123;</span><br><span class="line">    name.value = <span class="string">&#x27;新垣结衣&#x27;</span></span><br><span class="line">    <span class="keyword">await</span> nextTick()</span><br><span class="line">    age.value += <span class="number">2</span></span><br><span class="line">  &#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b3d80d39224a4531af9e2c62dab4ea5c~tplv-k3u1fbpfcp-watermark.image" alt="未标题-4.gif"></p>
-<p>现象：以上，当我们在同一个函数里同时改变<code>name</code>和<code>age</code>两个侦听源，<code>watch</code>的回调函数只触发了<strong>一次</strong>；当我们在<code>name</code>和<code>age</code>的改变之间增加了一个<code>nextTick</code>，<code>watch</code>回调函数触发了两次。</p>
-<p><strong>结论</strong>：我们可以通过watch侦听<strong>多个数据源</strong>的变化。如果在同一个函数里同时改变这些被侦听的来源，侦听器只会执行一次。若要使侦听器执行多次，我们可以利用 <code>nextTick</code> ，等待侦听器在下一步改变之前运行。</p>
-<h1 id="四、侦听引用对象（数组Array或对象Object）"><a href="#四、侦听引用对象（数组Array或对象Object）" class="headerlink" title="四、侦听引用对象（数组Array或对象Object）"></a>四、侦听引用对象（数组Array或对象Object）</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;div&gt;ref定义数组：&#123;&#123;arrayRef&#125;&#125;&lt;/div&gt;</span><br><span class="line">    &lt;div&gt;reactive定义数组：&#123;&#123;arrayReactive&#125;&#125;&lt;/div&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;button @click=<span class="string">&quot;changeArrayRef&quot;</span>&gt;改变ref定义数组第一项&lt;/button&gt;</span><br><span class="line">    &lt;button @click=<span class="string">&quot;changeArrayReactive&quot;</span>&gt;改变reactive定义数组第一项&lt;/button&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script setup&gt;</span><br><span class="line">  <span class="keyword">import</span> &#123;ref, reactive, watch&#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> arrayRef = ref([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line">  <span class="keyword">const</span> arrayReactive = reactive([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ref not deep, 不能深度侦听</span></span><br><span class="line">  <span class="keyword">const</span> arrayRefWatch = watch(arrayRef, <span class="function">(<span class="params">newValue, oldValue</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;newArrayRefWatch&#x27;</span>, newValue, <span class="string">&#x27;oldArrayRefWatch&#x27;</span>, oldValue)</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ref deep， 深度侦听，新旧值一样</span></span><br><span class="line">  <span class="keyword">const</span> arrayRefDeepWatch = watch(arrayRef, <span class="function">(<span class="params">newValue, oldValue</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;newArrayRefDeepWatch&#x27;</span>, newValue, <span class="string">&#x27;oldArrayRefDeepWatch&#x27;</span>, oldValue)</span><br><span class="line">  &#125;, &#123;<span class="attr">deep</span>: <span class="literal">true</span>&#125;)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ref deep, getter形式 ， 新旧值不一样</span></span><br><span class="line">  <span class="keyword">const</span> arrayRefDeepGetterWatch = watch(<span class="function">() =&gt;</span> [...arrayRef.value], <span class="function">(<span class="params">newValue, oldValue</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;newArrayRefDeepGetterWatch&#x27;</span>, newValue, <span class="string">&#x27;oldArrayRefDeepGetterWatch&#x27;</span>, oldValue)</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// reactive，默认深度监听，可以不设置deep:true, 新旧值一样</span></span><br><span class="line">  <span class="keyword">const</span> arrayReactiveWatch = watch(arrayReactive, <span class="function">(<span class="params">newValue, oldValue</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;newArrayReactiveWatch&#x27;</span>, newValue, <span class="string">&#x27;oldArrayReactiveWatch&#x27;</span>, oldValue)</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// reactive，getter形式 ， 新旧值不一样</span></span><br><span class="line">  <span class="keyword">const</span> arrayReactiveGetterWatch = watch(<span class="function">() =&gt;</span> [...arrayReactive], <span class="function">(<span class="params">newValue, oldValue</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;newArrayReactiveFuncWatch&#x27;</span>, newValue, <span class="string">&#x27;oldArrayReactiveFuncWatch&#x27;</span>, oldValue)</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> changeArrayRef = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    arrayRef.value[<span class="number">0</span>] = <span class="number">3</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> changeArrayReactive = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    arrayReactive[<span class="number">0</span>] = <span class="number">6</span></span><br><span class="line">  &#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/983875649e7f4527bd520d801d14b586~tplv-k3u1fbpfcp-watermark.image" alt="未标题-2.gif"></p>
-<p>现象：当将引用对象采用<code>ref</code>形式定义时，如果不加上<code>deep:true</code>，<code>watch</code>是<strong>侦听不到</strong>值的变化的；而加上<code>deep:true</code>，<code>watch</code>可以侦听到数据的变化，但是当前值和先前值一样，即不能获取先前值。当将引用对象采用<code>reactive</code>形式定义时，不作任何处理，<code>watch</code>可以侦听到数据的变化，但是当前值和先前值一样。两种定义下，把<code>watch</code>的数据源写成getter函数的形式并进行<strong>深拷贝</strong>返回，可以在<code>watch</code>回调中同时获得当前值和先前值。</p>
-<p><strong>结论</strong>：<br>当我们使用<code>watch</code>侦听引用对象时</p>
-<ul>
-<li>若使用<code>ref</code>定义的引用对象：<ul>
-<li>只要获取当前值，watch第一个参数直接写成数据源，另外需要<strong>加上</strong><code>deep:true</code>选项</li>
-<li>若要获取当前值和先前值，需要把数据源写成getter函数的形式，并且需对数据源进行深拷贝</li>
-</ul>
-</li>
-<li>若使用<code>reactive</code>定义的引用对象：<ul>
-<li>只要获取当前值，watch第一个参数直接写成数据源，可以<strong>不加</strong><code>deep：true</code>选项</li>
-<li>若要获取当前值和先前值，需要把数据源写成getter函数的形式，并且需对数据源进行深拷贝</li>
-</ul>
-</li>
-</ul>
-<p>🎉🎉🎉🎉🎉</p>
+<p>学不动了，后续在更新<del>~</del>😆</p>
 
       
 
@@ -258,7 +245,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">vue3</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">docker</a>
         		</li>
       		
 		</ul>
@@ -314,7 +301,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2022/05/03/Vue3%E4%B8%ADwatch%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2022/03/07/docker%E5%8F%91%E5%B8%83%E4%B8%80%E4%B8%AAspringboot%E5%B7%A5%E7%A8%8B/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -328,18 +315,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2022/05/03/qiankun%E5%BE%AE%E5%89%8D%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8Evue%E5%BA%94%E7%94%A8%E7%9A%84%E5%AE%9E%E8%B7%B5/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          qiankun微前端应用于vue应用的实践
-        
-      </div>
-    </a>
   
-  
-    <a href="/2021/06/30/docker-1/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Docker学习：从创建一个执行初始化sql脚本的mysql容器开始</div>
+    <a href="/2022/01/10/VUE2%E4%B8%AD%E7%9A%84%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5provide-inject%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%93%8D%E5%BA%94%E5%BC%8F/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">VUE2中的依赖注入provide/inject如何实现响应式？</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -465,11 +443,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">CSS</a>
+                <a href="javascript:void(0)" class="js-tag color5">vue3</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">vue3</a>
+                <a href="javascript:void(0)" class="js-tag color5">vue2</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">CSS</a>
               </li>
              
               <li class="article-tag-list-item">

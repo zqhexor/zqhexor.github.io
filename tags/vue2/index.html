@@ -6,22 +6,15 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>qiankun微前端应用于vue应用的实践 | Hexor&#39;s Blog</title>
+  <title>Tag: vue2 | Hexor&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言✨本文介绍了用qiankun微前端框架用来集成vue应用的基本方案以及集成过程中遇到的一些常见问题。 一、基本使用主应用1.先安装 qiankun ： 1$ yarn add qiankun # 或者 npm i qiankun -S  2.注册微应用并启动： 1234567891011121314151617181920212223242526272829import &amp;#123; regi">
-<meta property="og:type" content="article">
-<meta property="og:title" content="qiankun微前端应用于vue应用的实践">
-<meta property="og:url" content="http://yoursite.com/2022/05/03/qiankun%E5%BE%AE%E5%89%8D%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8Evue%E5%BA%94%E7%94%A8%E7%9A%84%E5%AE%9E%E8%B7%B5/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexor&#39;s Blog">
+<meta property="og:url" content="http://yoursite.com/tags/vue2/index.html">
 <meta property="og:site_name" content="Hexor&#39;s Blog">
-<meta property="og:description" content="前言✨本文介绍了用qiankun微前端框架用来集成vue应用的基本方案以及集成过程中遇到的一些常见问题。 一、基本使用主应用1.先安装 qiankun ： 1$ yarn add qiankun # 或者 npm i qiankun -S  2.注册微应用并启动： 1234567891011121314151617181920212223242526272829import &amp;#123; regi">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4c2029c71cb2404281626d18c5d651fe~tplv-k3u1fbpfcp-watermark.image">
-<meta property="article:published_time" content="2022-05-03T01:50:00.000Z">
-<meta property="article:modified_time" content="2022-05-02T17:53:48.385Z">
 <meta property="article:author" content="HexOr">
-<meta property="article:tag" content="qiankun">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4c2029c71cb2404281626d18c5d651fe~tplv-k3u1fbpfcp-watermark.image">
   
     <link rel="alternative" href="/atom.xml" title="Hexor&#39;s Blog" type="application/atom+xml">
   
@@ -157,249 +150,60 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-qiankun微前端应用于vue应用的实践" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      qiankun微前端应用于vue应用的实践
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2022" class="archive-year">2022</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2022/01/10/VUE2%E4%B8%AD%E7%9A%84%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5provide-inject%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%93%8D%E5%BA%94%E5%BC%8F/" class="archive-article-date">
+  	<time datetime="2022-01-10T02:10:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-01-10</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2022/01/10/VUE2%E4%B8%AD%E7%9A%84%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5provide-inject%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%93%8D%E5%BA%94%E5%BC%8F/">VUE2中的依赖注入provide/inject如何实现响应式？</a>
     </h1>
   
 
-        
-        <a href="/2022/05/03/qiankun%E5%BE%AE%E5%89%8D%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8Evue%E5%BA%94%E7%94%A8%E7%9A%84%E5%AE%9E%E8%B7%B5/" class="archive-article-date">
-  	<time datetime="2022-05-03T01:50:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-05-03</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="前言✨"><a href="#前言✨" class="headerlink" title="前言✨"></a>前言✨</h1><p>本文介绍了用qiankun微前端框架用来集成vue应用的基本方案以及集成过程中遇到的一些常见问题。</p>
-<h1 id="一、基本使用"><a href="#一、基本使用" class="headerlink" title="一、基本使用"></a>一、基本使用</h1><h2 id="主应用"><a href="#主应用" class="headerlink" title="主应用"></a>主应用</h2><p>1.先安装 <code>qiankun</code> ：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yarn add qiankun # 或者 npm i qiankun -S</span><br></pre></td></tr></table></figure>
-
-<p>2.注册微应用并启动：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">import &#123; registerMicroApps, start &#125; from &#39;qiankun&#39;</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * step1 注册微应用</span><br><span class="line"> *&#x2F;</span><br><span class="line">registerMicroApps([</span><br><span class="line">  &#123;</span><br><span class="line">    name: &#39;child-vue2&#39;, &#x2F;&#x2F; 注册应用名</span><br><span class="line">    entry: &#39;&#x2F;&#x2F;localhost:7012&#39;,&#x2F;&#x2F; 注册服务</span><br><span class="line">    container: &#39;#sub-container&#39;, &#x2F;&#x2F; 挂载的容器</span><br><span class="line">    activeRule: &#39;&#x2F;vue2&#39;, &#x2F;&#x2F; 路由匹配规则</span><br><span class="line">  &#125;,</span><br><span class="line">  &#123;</span><br><span class="line">    name: &#39;child-vue3&#39;,</span><br><span class="line">    entry: &#39;&#x2F;&#x2F;localhost:7013&#39;,</span><br><span class="line">    container: &#39;#sub-container&#39;,</span><br><span class="line">    activeRule: &#39;&#x2F;vue3&#39;,</span><br><span class="line">  &#125;</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * Step2 设置默认进入的子应用（可选）</span><br><span class="line"> *&#x2F;</span><br><span class="line">setDefaultMountApp(&#39;&#x2F;&#39;)</span><br><span class="line"></span><br><span class="line">&#x2F;**</span><br><span class="line"> * Step3 启动qiankun应用</span><br><span class="line"> *&#x2F;</span><br><span class="line">start()</span><br></pre></td></tr></table></figure>
-<h2 id="微应用"><a href="#微应用" class="headerlink" title="微应用"></a>微应用</h2><h3 id="Vue-微应用"><a href="#Vue-微应用" class="headerlink" title="Vue 微应用"></a>Vue 微应用</h3><p>微应用不需要额外安装任何其他依赖即可接入 qiankun 主应用。</p>
-<p>以 <code>vue 2.x</code> 项目为例</p>
-<ol>
-<li><p>在 <code>src</code> 目录新增 <code>public-path.js</code>，并在<code>main.js</code>最顶部引入 <code>public-path.js</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if (window.__POWERED_BY_QIANKUN__) &#123;</span><br><span class="line">  __webpack_public_path__ &#x3D; window.__INJECTED_PUBLIC_PATH_BY_QIANKUN__;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>微应用建议使用 <code>history</code> 模式的路由，需要设置路由 <code>base</code>，值和它的 <code>activeRule</code> 是一样的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const router &#x3D; new VueRouter(&#123;</span><br><span class="line">  mode: &#39;history&#39;,</span><br><span class="line">  base: window.__POWERED_BY_QIANKUN__ ? &#39;&#x2F;vue2&#39; : &#39;&#x2F;&#39;,</span><br><span class="line">  routes</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-
-</li>
-</ol>
-<ol start="3">
-<li><p>在入口文件<code>main.js</code>中修改并导出<code>bootstrap</code>、<code>mount</code>、<code>unmount</code>三个生命周期函数，保证微应用单独运行且能在qiankun环境中运行。为了避免根 id <code>#app</code> 与其他的 DOM 冲突，需要限制查找范围。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">import &#39;.&#x2F;public-path&#39;</span><br><span class="line">import Vue from &#39;vue&#39;</span><br><span class="line">import App from &#39;.&#x2F;App.vue&#39;</span><br><span class="line">import routes from &#39;.&#x2F;router&#39;</span><br><span class="line">import store from &#39;.&#x2F;store&#39;</span><br><span class="line"></span><br><span class="line">Vue.config.productionTip &#x3D; false</span><br><span class="line"></span><br><span class="line">let instance &#x3D; null</span><br><span class="line">function render(props &#x3D; &#123;&#125;) &#123;</span><br><span class="line">  const &#123; container &#125; &#x3D; props</span><br><span class="line">  instance &#x3D; new Vue(&#123;</span><br><span class="line">    router,</span><br><span class="line">    store,</span><br><span class="line">    render: (h) &#x3D;&gt; h(App)</span><br><span class="line">  &#125;).$mount(container ? container.querySelector(&#39;#app&#39;) : &#39;#app&#39;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 独立运行微应用时</span><br><span class="line">if (!window.__POWERED_BY_QIANKUN__) &#123;</span><br><span class="line">  render()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export async function bootstrap() &#123;</span><br><span class="line">  console.log(&#39;[vue] vue app bootstraped&#39;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 在qiankun中运行时</span><br><span class="line">export async function mount(props) &#123;</span><br><span class="line">  render(props)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">export async function unmount() &#123;</span><br><span class="line">  instance.$destroy()</span><br><span class="line">  instance.$el.innerHTML &#x3D; &#39;&#39;</span><br><span class="line">  instance &#x3D; null</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>修改 <code>webpack</code> 打包，允许开发环境跨域和 <code>umd</code> 打包（<code>vue.config.js</code>）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">const &#123; name &#125; &#x3D; require(&#39;.&#x2F;package&#39;);</span><br><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  devServer: &#123;</span><br><span class="line">    headers: &#123;</span><br><span class="line">      &#39;Access-Control-Allow-Origin&#39;: &#39;*&#39;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  configureWebpack: &#123;</span><br><span class="line">    output: &#123;</span><br><span class="line">      library: &#96;$&#123;name&#125;-[name]&#96;,</span><br><span class="line">      libraryTarget: &#39;umd&#39;, &#x2F;&#x2F; 把微应用打包成 umd 库格式</span><br><span class="line">      jsonpFunction: &#96;webpackJsonp_$&#123;name&#125;&#96;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ol>
-<h1 id="二、细节"><a href="#二、细节" class="headerlink" title="二、细节"></a>二、细节</h1><h3 id="1-生命周期"><a href="#1-生命周期" class="headerlink" title="1.生命周期"></a>1.生命周期</h3><p>通过此图我们可以了解主应用和子应用的钩子函数的加载顺序，方便我们对其进行控制。<br><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4c2029c71cb2404281626d18c5d651fe~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
-<h3 id="2-样式隔离"><a href="#2-样式隔离" class="headerlink" title="2.样式隔离"></a>2.样式隔离</h3><h4 id="qiankun提供了两种隔离模式："><a href="#qiankun提供了两种隔离模式：" class="headerlink" title="qiankun提供了两种隔离模式："></a>qiankun提供了两种隔离模式：</h4><ul>
-<li>1.严格沙箱（不推荐）<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start(&#123;sandbox: &#123;strictStyleIsolation: true&#125;&#125;)</span><br></pre></td></tr></table></figure>
-开启此配置时，子应用会以Shadow DOM 的形式嵌入到主应用，实现真正的样式隔离，但是同时会带来新的问题：</li>
-</ul>
-<p>Popover弹出框、Select下拉选项、Dropdown下拉菜单等会因找不到主应用的body会丢失，或跑到整个屏幕外。（目前还没有找到解决的办法，todo）</p>
-<ul>
-<li>2.实验沙箱（不推荐）<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start(&#123;sandbox: &#123;experimentalStyleIsolation: true&#125;&#125;)</span><br></pre></td></tr></table></figure>
-开启此配置时，相当于实现了类似于vue中style标签中的scoped属性，qiankun会自动为子应用所有的样式增加后缀标签，如：<code>div[data-qiankun-microName]</code>，此配置会导致：</li>
-</ul>
-<p>Popover弹出框、Select下拉选项、Dropdown下拉菜单等插入到主应用中，而主应用不能访问到scope域的样式，而导致样式丢失。</p>
-<p>解决方案： 可以把子应用的弹窗样式copy一份至主应用的全局样式中。但是此方法带来的维护成本太大。</p>
-<h4 id="不采用qiankun的沙箱隔离"><a href="#不采用qiankun的沙箱隔离" class="headerlink" title="不采用qiankun的沙箱隔离"></a>不采用qiankun的沙箱隔离</h4><p>既然qiankun带来的沙箱隔离带来这么多问题, 我们能不能自己来实现样式隔离了，下面提供三个思路：</p>
-<ul>
-<li><p>1.采用规范的命名（主应用公共样式较少时推荐）</p>
-<p>  在主应用的公共样式比较少的情况下可以使用规范唯一的命名来避免样式污染（如采用<code>BEM</code>规范来命名），把非公共样式尽量利用vue的scoped属性进行隔离。</p>
-</li>
-<li><p>2.采用css-module的方式隔离（主子隔离时，推荐）<br>（1）在主应用的<code>vue.config.js</code>里，加入如下配置，以.module.(css|less|sass|scss|styl) 结尾的css开启模块化</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  css: &#123;</span><br><span class="line">    extract: false, &#x2F;&#x2F; 是否使用css分离插件 ExtractTextPlugin</span><br><span class="line">    sourceMap: true,</span><br><span class="line">    requireModuleExtension: true, &#x2F;&#x2F; true则只有以.module.(css|less|sass|scss|styl) 结尾的开启模块化</span><br><span class="line">    loaderOptions: &#123;</span><br><span class="line">      css: &#123;</span><br><span class="line">        modules: &#123;</span><br><span class="line">          localIdentName: &#39;[path][name]-[hash]&#39;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>（2）然后公共样式以模块化的方式引入，然后再绑定在页面相应的class上，下面是一个模块化css引入并使用的示例：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class&#x3D;&quot;home&quot;&gt;</span><br><span class="line">    &lt;div :class&#x3D;&quot;module.good&quot;&gt;good&lt;&#x2F;div&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">import module from &#39;.&#x2F;..&#x2F;assets&#x2F;reset.module.less&#39;</span><br><span class="line">export default &#123;</span><br><span class="line">  data() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      module &#x2F;&#x2F; 需要在data中变成响应式，然后再绑定到class上</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>3.安装配置postcss-plugin-namespace插件来实现隔离（如果多个子应用同时出现在一个页面，推荐）<br>（1） 添加依赖<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i postcss-plugin-namespace -D</span><br></pre></td></tr></table></figure>
-（2） 配置postcss<br>在<code>postcss.config.js</code>中添加如下配置<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  plugins: [</span><br><span class="line">    require(&#39;postcss-plugin-namespace&#39;)(&#39;.main-project&#39;, &#123; &#x2F;&#x2F; 相当于给工程的css加一个作用域前缀</span><br><span class="line">      ignore:  [&#39;*&#39;]</span><br><span class="line">    &#125;)</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-上述配置相当于给工程的所有样式添加了一个作用域前缀<code>.main-project</code>，我们只需要在挂载的根节点加上这个class，就可以实现应用之间的隔离。</li>
-</ul>
-<h3 id="3-history模式下publicPath不能使用相对路径，需使用绝对路径"><a href="#3-history模式下publicPath不能使用相对路径，需使用绝对路径" class="headerlink" title="3.history模式下publicPath不能使用相对路径，需使用绝对路径"></a>3.history模式下<code>publicPath</code>不能使用相对路径，需使用绝对路径</h3><p>主应用需配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">publicPath:&#39;&#x2F;&#39;</span><br></pre></td></tr></table></figure>
-<h3 id="4-应用间的通信"><a href="#4-应用间的通信" class="headerlink" title="4.应用间的通信"></a>4.应用间的通信</h3><p>qiankun提供了<code>initGlobalState</code> <code>onGlobalStateChange</code> <code>setGlobalState</code>用于通信。</p>
-<p>主应用我们可以直接导入</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import &#123; initGlobalState &#125; from &#39;qiankun&#39;</span><br><span class="line">&#x2F;&#x2F; 初始化全局变量</span><br><span class="line">const &#123; onGlobalStateChange, setGlobalState &#125; &#x3D; initGlobalState(&#123;</span><br><span class="line">  user: &#39;qiankun&#39;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 把监测变量改变和改变状态挂载到Vue上</span><br><span class="line">Vue.prototype.$onGlobalStateChange &#x3D; onGlobalStateChange</span><br><span class="line">Vue.prototype.$setGlobalState &#x3D; setGlobalState</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 监测变量改变</span><br><span class="line">onGlobalStateChange((value, prev) &#x3D;&gt; console.log(&#39;[onGlobalStateChange - master]:&#39;, value, prev),true)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; 改变全局变量</span><br><span class="line">setGlobalState(&#123;</span><br><span class="line">  user: &#39;master&#39;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<p>子应用我们需在生命周期里把<code>onGlobalStateChange</code> <code>setGlobalState</code>挂载到子应用的vue对象上：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export async function mount(props) &#123;</span><br><span class="line">    Vue.prototype.$onGlobalStateChange &#x3D; props.onGlobalStateChange</span><br><span class="line">    Vue.prototype.$setGlobalState &#x3D; props.setGlobalState</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="5-如何在主应用的多级嵌套路由页面下加载微应用"><a href="#5-如何在主应用的多级嵌套路由页面下加载微应用" class="headerlink" title="5.如何在主应用的多级嵌套路由页面下加载微应用"></a>5.如何在主应用的多级嵌套路由页面下加载微应用</h3><p>主应用注册这个路由时给 <code>path</code> 加一个 <code>*</code>，使其在未匹配到主应用的某个页面时，也能加载主应用的外框，确保子应用要挂载的容器存在。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import empty from &quot;.&#x2F;..&#x2F;empty&quot;</span><br><span class="line"></span><br><span class="line">export default &#123;</span><br><span class="line">  path: &#39;&#x2F;app&#39;,</span><br><span class="line">  name: &#39;AppLayout&#39;,</span><br><span class="line">  component: AppLayout,</span><br><span class="line">  children: [&#123;</span><br><span class="line">    path: &quot;manage&quot;,</span><br><span class="line">    name: &#39;AppManage&#39;,</span><br><span class="line">    component: Manage,</span><br><span class="line">  &#125;,&#123;</span><br><span class="line">    path: &quot;*&quot;,</span><br><span class="line">    name: &#39;empty&#39;,</span><br><span class="line">    component: empty &#x2F;&#x2F;空的div标签</span><br><span class="line">  &#125;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>另外在注册微应用时，<code>activeRule</code> 需要包含主应用的这个路由 <code>path</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">registerMicroApps([</span><br><span class="line">  &#123;</span><br><span class="line">    name: &#39;website&#39;, &#x2F;&#x2F; 注册应用名</span><br><span class="line">    entry: &#39;&#x2F;&#x2F;localhost:8888&#39;,&#x2F;&#x2F; 注册服务</span><br><span class="line">    container: &#39;#con&#39;, &#x2F;&#x2F; 挂载的容器</span><br><span class="line">    activeRule: &#39;&#x2F;app&#x2F;website&#39;, &#x2F;&#x2F; 路由匹配规则</span><br><span class="line">  &#125;</span><br><span class="line">])</span><br></pre></td></tr></table></figure>
-
-<p>子应用的路由注册时<code>base</code>也需要加上这个<code>path</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">function render(props &#x3D; &#123;&#125;) &#123;</span><br><span class="line">  const &#123;container&#125; &#x3D; props</span><br><span class="line">  router &#x3D; new VueRouter(&#123;</span><br><span class="line">    mode: &#39;history&#39;,</span><br><span class="line">    base: container ? &#x2F;app&#x2F;website : &#39;&#x2F;&#39;,</span><br><span class="line">    routes</span><br><span class="line">  &#125;)</span><br><span class="line">  instance &#x3D; new Vue(&#123;</span><br><span class="line">    router,</span><br><span class="line">    render: h &#x3D;&gt; h(App)</span><br><span class="line">  &#125;).$mount(container ? container.querySelector(&#39;#app&#39;) : &#39;#app&#39;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="6-微应用打包之后-css-中的字体文件和图片加载-404"><a href="#6-微应用打包之后-css-中的字体文件和图片加载-404" class="headerlink" title="6.微应用打包之后 css 中的字体文件和图片加载 404"></a>6.微应用打包之后 css 中的字体文件和图片加载 404</h3><p>原因是 <code>qiankun</code> 将外链样式改成了内联样式，但是字体文件和背景图片的加载路径是相对路径。而 <code>css</code> 文件一旦打包完成，就无法通过动态修改 <code>publicPath</code> 来修正其中的字体文件和背景图片的路径。</p>
-<p>借助 <code>webpack</code> 的 <code>url-loader</code> 将字体文件和图片打包成 <code>base64</code>（适用于字体文件和图片体积小的项目）（<strong>推荐</strong>）</p>
-<p><code>vue-cli3</code> 项目写法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  chainWebpack: (config) &#x3D;&gt; &#123;</span><br><span class="line">    config.module.rule(&#39;fonts&#39;).use(&#39;url-loader&#39;).loader(&#39;url-loader&#39;).options(&#123;&#125;).end();</span><br><span class="line">    config.module.rule(&#39;images&#39;).use(&#39;url-loader&#39;).loader(&#39;url-loader&#39;).options(&#123;&#125;).end();</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<h3 id="7-发布时，微应用的nginx要配置支持跨域"><a href="#7-发布时，微应用的nginx要配置支持跨域" class="headerlink" title="7.发布时，微应用的nginx要配置支持跨域"></a>7.发布时，微应用的nginx要配置支持跨域</h3><p>只需要在微应用Nginx的配置文件中配置以下参数：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F; &#123;  </span><br><span class="line">    add_header Access-Control-Allow-Origin *;</span><br><span class="line">    add_header Access-Control-Allow-Methods &#39;GET, POST, OPTIONS&#39;;</span><br><span class="line">    add_header Access-Control-Allow-Headers &#39;DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization&#39;;</span><br><span class="line"></span><br><span class="line">    if ($request_method &#x3D; &#39;OPTIONS&#39;) &#123;</span><br><span class="line">        return 204;</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
-<p>主应用的nginx需要配置代理转发：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">location ~ ^&#x2F;api&#x2F; &#123;</span><br><span class="line">    proxy_pass http:&#x2F;&#x2F;8.130.24.19:8105; &#x2F;&#x2F; 代理地址</span><br><span class="line"> proxy_set_header   Host             $host;</span><br><span class="line"> proxy_set_header   X-Real-IP        $remote_addr;</span><br><span class="line"> proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;</span><br><span class="line"> proxy_set_header Cookie $http_cookie;</span><br><span class="line"> proxy_cookie_path &#x2F; &#x2F;df&#x2F;;</span><br><span class="line"> rewrite ^&#x2F;api&#x2F;(.*)$ &#x2F;$1 break;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>更多细节方案持续更新中~🚀🚀🚀</p>
-<p>官网：<a target="_blank" rel="noopener" href="https://qiankun.umijs.org/zh">https://qiankun.umijs.org/zh</a></p>
-
-      
-
-      
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">qiankun</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">vue2</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2022/05/03/qiankun%E5%BE%AE%E5%89%8D%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8Evue%E5%BA%94%E7%94%A8%E7%9A%84%E5%AE%9E%E8%B7%B5/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
   
   
-    <a href="/2022/05/03/Vue3%E4%B8%ADwatch%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Vue3中watch的最佳实践</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
+    
 
 
           </div>
@@ -422,9 +226,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
-		isTag: false,
+		isTag: true,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
@@ -492,11 +296,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">CSS</a>
+                <a href="javascript:void(0)" class="js-tag color5">vue3</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">vue3</a>
+                <a href="javascript:void(0)" class="js-tag color5">vue2</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">CSS</a>
               </li>
              
               <li class="article-tag-list-item">

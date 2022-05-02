@@ -152,6 +152,208 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-docker发布一个springboot工程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/03/07/docker%E5%8F%91%E5%B8%83%E4%B8%80%E4%B8%AAspringboot%E5%B7%A5%E7%A8%8B/">docker发布一个springboot工程</a>
+    </h1>
+  
+
+        
+        <a href="/2022/03/07/docker%E5%8F%91%E5%B8%83%E4%B8%80%E4%B8%AAspringboot%E5%B7%A5%E7%A8%8B/" class="archive-article-date">
+  	<time datetime="2022-03-07T01:41:18.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言✨"><a href="#前言✨" class="headerlink" title="前言✨"></a>前言✨</h1><p>本文介绍如何使用docker发布一个springboot工程到腾讯云</p>
+<h1 id="一、搭建mysql数据库"><a href="#一、搭建mysql数据库" class="headerlink" title="一、搭建mysql数据库"></a>一、搭建mysql数据库</h1><h2 id="1-拉取mysql镜像"><a href="#1-拉取mysql镜像" class="headerlink" title="1.拉取mysql镜像"></a>1.拉取mysql镜像</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql8.0.0</span><br></pre></td></tr></table></figure>
+<h2 id="2-启动mysql"><a href="#2-启动mysql" class="headerlink" title="2.启动mysql"></a>2.启动mysql</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 3306:3306 --name mysql-1 --privileged&#x3D;true --restart unless-stopped -v &#x2F;opt&#x2F;mysql_docker&#x2F;logs:&#x2F;logs -v &#x2F;opt&#x2F;mysql_docker&#x2F;localtime -e MYSQL_ROOT_PASSWORD&#x3D;123456 -itd mysql:8.0.0</span><br></pre></td></tr></table></figure>
+<p>–privileged=true 挂载文件权限设置</p>
+<p>–restart unless-stopped 设置 开机后自动重启容器</p>
+<p>-v /opt/mysql_docker/logs:/logs 挂载日志</p>
+<p>-v /etc/localtime:/etc/localtime 容器时间与宿主机同步</p>
+<p>-e MYSQL_ROOT_PASSWORD=123456 设置密码</p>
+<p>-itd mysql:8.0.0 后台启动,mysql</p>
+<p>-v /opt/mysql_docker/mysql:/etc/mysql 挂载配置文件</p>
+<p>-v /opt/mysql_docker/data:/var/lib/mysql 挂载数据文件 持久化到主机</p>
+<h2 id="3-修改mysql的密码"><a href="#3-修改mysql的密码" class="headerlink" title="3.修改mysql的密码"></a>3.修改mysql的密码</h2><p><strong>注意：腾讯云安全组默认不添加开放 3306 端口，需要手动添加，才能连接远程工具</strong></p>
+<p><strong>另外，当远程工具不能连接时，需按下面的操作更改加密规则为：<code>mysql_native_password</code></strong></p>
+<ol>
+<li>进入容器内部<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it mysql-1 bash</span><br></pre></td></tr></table></figure></li>
+<li>输入用户名<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure></li>
+<li>修改密码<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">use mysql;</span><br><span class="line">select host,user,plugin from user;</span><br><span class="line">alter user &#39;root&#39;@&#39;%&#39; identified with mysql_native_password by &#39;123456&#39;;</span><br><span class="line">flush privileges;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h1 id="二、创建后端镜像并启动"><a href="#二、创建后端镜像并启动" class="headerlink" title="二、创建后端镜像并启动"></a>二、创建后端镜像并启动</h1><ul>
+<li>方式一：通过–link<h2 id="1-打包springboot工程并上传"><a href="#1-打包springboot工程并上传" class="headerlink" title="1.打包springboot工程并上传"></a>1.打包springboot工程并上传</h2></li>
+</ul>
+<ol>
+<li>将关联的数据库<code>ip地址</code>改成<code>别名</code>（后面会提到），以下把ip改成了emysql<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spring.datasource.url&#x3D;jdbc:mysql:&#x2F;&#x2F;emysql:3306&#x2F;music?serverTimezone&#x3D;Asia&#x2F;Shanghai&amp;useUnicode&#x3D;true&amp;characterEncoding&#x3D;utf8&amp;useSSL&#x3D;false</span><br></pre></td></tr></table></figure></li>
+<li>然后用maven对数据库进行package打包，然后上传至腾讯云</li>
+</ol>
+<h2 id="2-编写Dockerfile并打包镜像"><a href="#2-编写Dockerfile并打包镜像" class="headerlink" title="2.编写Dockerfile并打包镜像"></a>2.编写Dockerfile并打包镜像</h2><ol>
+<li>Dockerfile配置如下：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">FROM java:8</span><br><span class="line">EXPOSE 8090</span><br><span class="line"></span><br><span class="line">VOLUME &#x2F;tmp</span><br><span class="line"></span><br><span class="line">ADD music-1.0-SNAPSHOT.jar &#x2F;app.jar</span><br><span class="line">ENTRYPOINT [&quot;java&quot;,&quot;-jar&quot;,&quot;&#x2F;app.jar&quot;]</span><br></pre></td></tr></table></figure></li>
+<li>然后通过以下命令打包镜像<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t music .</span><br></pre></td></tr></table></figure>
+<h2 id="3-启动镜像"><a href="#3-启动镜像" class="headerlink" title="3.启动镜像"></a>3.启动镜像</h2>通过<code>--link</code>命令连接mysql-1容器并取别名为emysql(用于上述提到的数据库地址配置)<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 8090:8090 --name music --link mysql-1:emysql -d music</span><br></pre></td></tr></table></figure></li>
+</ol>
+<ul>
+<li>方式二：docker-compose方案：</li>
+</ul>
+<p>学不动了，后续在更新<del>~</del>😆</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">docker</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/03/07/docker%E5%8F%91%E5%B8%83%E4%B8%80%E4%B8%AAspringboot%E5%B7%A5%E7%A8%8B/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-VUE2中的依赖注入provide-inject如何实现响应式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/01/10/VUE2%E4%B8%AD%E7%9A%84%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5provide-inject%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%93%8D%E5%BA%94%E5%BC%8F/">VUE2中的依赖注入provide/inject如何实现响应式？</a>
+    </h1>
+  
+
+        
+        <a href="/2022/01/10/VUE2%E4%B8%AD%E7%9A%84%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5provide-inject%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%93%8D%E5%BA%94%E5%BC%8F/" class="archive-article-date">
+  	<time datetime="2022-01-10T02:10:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-01-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>我们知道，使用<code>provide/inject</code>这一对API，可以<strong>暴露出父组件的数据和方法供所有后代组件</strong>使用。这个特性有两个部分：父组件有一个 <code>provide</code> 选项来提供数据，子组件有一个 <code>inject</code> 选项来开始使用这些数据。</p>
+<p>现有父组件和子组件如下</p>
+<p><code>父组件</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class&#x3D;&quot;parent&quot;&gt;</span><br><span class="line">    &lt;div&gt;父组件：&#123;&#123; this.name &#125;&#125;&lt;&#x2F;div&gt;</span><br><span class="line">    &lt;button @click&#x3D;&quot;changeIdol&quot;&gt;改变偶像&lt;&#x2F;button&gt;</span><br><span class="line">    &lt;hr&gt;</span><br><span class="line">    &lt;child&gt;&lt;&#x2F;child&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">import Child from &#39;.&#x2F;Child&#39;</span><br><span class="line">export default &#123;</span><br><span class="line">  name: &#39;Parent&#39;,</span><br><span class="line">  components: &#123;</span><br><span class="line">    Child</span><br><span class="line">  &#125;,</span><br><span class="line">  provide() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      parentName: this.name</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  data() &#123;</span><br><span class="line">    return &#123;</span><br><span class="line">      name: &#39;小松菜奈&#39;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    changeIdol() &#123;</span><br><span class="line">      this.name &#x3D; &#39;新垣结衣&#39;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+<p><code>子组件</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class&#x3D;&quot;child&quot;&gt;</span><br><span class="line">    &lt;!-- 模板中使用时，this不能省 --&gt;</span><br><span class="line">    &lt;div&gt;子组件：&#123;&#123; this.parentName &#125;&#125;&lt;&#x2F;div&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">  export default &#123;</span><br><span class="line">    name: &#39;Child&#39;,</span><br><span class="line">    inject: [&#39;parentName&#39;],</span><br><span class="line">    data() &#123;</span><br><span class="line">      return &#123;</span><br><span class="line">        </span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+<p>如果父组件直接注入数据，不做任何处理，当我改变父组件的数据时，子组件的数据不变，可见响应式消失了。</p>
+<p><img src="https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b097361db4c44548b59f3c0ba64956aa~tplv-k3u1fbpfcp-watermark.image" alt="未标题-1.gif"></p>
+<p>那如何让注入的数据保持响应式了？</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><h3 id="1-传入响应式数据✨"><a href="#1-传入响应式数据✨" class="headerlink" title="1.传入响应式数据✨"></a>1.传入响应式数据✨</h3><p>vue2虽然不能像vue3那样创造响应式数据ref、reactive，但vue2的<code>this</code>就是个响应式数据。如果我们直接在父元素中提供依赖<code>this</code>，那么后代组件就能获得响应式。</p>
+<p><code>父组件</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">provide() &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    parent: this</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>子组件</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class&#x3D;&quot;child&quot;&gt;</span><br><span class="line">    &lt;!-- 模板中使用时，this不能省 --&gt;</span><br><span class="line">    &lt;div&gt;子组件：&#123;&#123; this.parent.name &#125;&#125;&lt;&#x2F;div&gt;</span><br><span class="line">    &lt;button @click&#x3D;&quot;print&quot;&gt;打印响应式数据&lt;&#x2F;button&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">  export default &#123;</span><br><span class="line">    name: &#39;Child&#39;,</span><br><span class="line">    inject: [&#39;parent&#39;],</span><br><span class="line">    methods: &#123;</span><br><span class="line">      print() &#123;</span><br><span class="line">        console.log(this.parent.name) &#x2F;&#x2F; 方法中使用</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="2-以函数式的方式传入✨"><a href="#2-以函数式的方式传入✨" class="headerlink" title="2.以函数式的方式传入✨"></a>2.以函数式的方式传入✨</h3><p>父组件中以函数式的方式提供依赖，后代组件中采用函数的方式调用。</p>
+<p><code>父组件</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">provide() &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    parentName: () &#x3D;&gt; this.name</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>子组件</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div class&#x3D;&quot;child&quot;&gt;</span><br><span class="line">    &lt;!-- 模板中使用时，this不能省 --&gt;</span><br><span class="line">    &lt;div&gt;子组件：&#123;&#123; this.parentName() &#125;&#125;&lt;&#x2F;div&gt;</span><br><span class="line">    &lt;button @click&#x3D;&quot;print&quot;&gt;打印响应式数据&lt;&#x2F;button&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">  export default &#123;</span><br><span class="line">    name: &#39;Child&#39;,</span><br><span class="line">    inject: [&#39;parentName&#39;],</span><br><span class="line">    methods: &#123;</span><br><span class="line">      print() &#123;</span><br><span class="line">        console.log(this.parentName()) &#x2F;&#x2F; 方法中使用时，以函数的方式调用</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+<p>— 完结 — 🎉🎉🎉</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">vue2</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/01/10/VUE2%E4%B8%AD%E7%9A%84%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5provide-inject%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%93%8D%E5%BA%94%E5%BC%8F/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-qiankun微前端应用于vue应用的实践" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -159,13 +361,13 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2022/05/03/qiankun%E5%BE%AE%E5%89%8D%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8Evue%E5%BA%94%E7%94%A8%E7%9A%84%E5%AE%9E%E8%B7%B5/">qiankun微前端应用于vue应用的实践</a>
+      <a class="article-title" href="/2021/09/01/qiankun%E5%BE%AE%E5%89%8D%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8Evue%E5%BA%94%E7%94%A8%E7%9A%84%E5%AE%9E%E8%B7%B5/">qiankun微前端应用于vue应用的实践</a>
     </h1>
   
 
         
-        <a href="/2022/05/03/qiankun%E5%BE%AE%E5%89%8D%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8Evue%E5%BA%94%E7%94%A8%E7%9A%84%E5%AE%9E%E8%B7%B5/" class="archive-article-date">
-  	<time datetime="2022-05-03T01:50:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-05-03</time>
+        <a href="/2021/09/01/qiankun%E5%BE%AE%E5%89%8D%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8Evue%E5%BA%94%E7%94%A8%E7%9A%84%E5%AE%9E%E8%B7%B5/" class="archive-article-date">
+  	<time datetime="2021-09-01T16:28:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-09-01</time>
 </a>
         
       </header>
@@ -278,7 +480,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2022/05/03/qiankun%E5%BE%AE%E5%89%8D%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8Evue%E5%BA%94%E7%94%A8%E7%9A%84%E5%AE%9E%E8%B7%B5/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/09/01/qiankun%E5%BE%AE%E5%89%8D%E7%AB%AF%E5%BA%94%E7%94%A8%E4%BA%8Evue%E5%BA%94%E7%94%A8%E7%9A%84%E5%AE%9E%E8%B7%B5/">展开全文 >></a>
         </p>
       
 
@@ -315,13 +517,13 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2022/05/03/Vue3%E4%B8%ADwatch%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">Vue3中watch的最佳实践</a>
+      <a class="article-title" href="/2021/07/04/Vue3%E4%B8%ADwatch%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">Vue3中watch的最佳实践</a>
     </h1>
   
 
         
-        <a href="/2022/05/03/Vue3%E4%B8%ADwatch%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" class="archive-article-date">
-  	<time datetime="2022-05-03T01:26:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-05-03</time>
+        <a href="/2021/07/04/Vue3%E4%B8%ADwatch%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" class="archive-article-date">
+  	<time datetime="2021-07-04T16:37:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-07-04</time>
 </a>
         
       </header>
@@ -396,7 +598,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2022/05/03/Vue3%E4%B8%ADwatch%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/07/04/Vue3%E4%B8%ADwatch%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">展开全文 >></a>
         </p>
       
 
@@ -1296,11 +1498,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">CSS</a>
+                <a href="javascript:void(0)" class="js-tag color5">vue3</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">vue3</a>
+                <a href="javascript:void(0)" class="js-tag color5">vue2</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">CSS</a>
               </li>
              
               <li class="article-tag-list-item">
