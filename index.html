@@ -152,6 +152,356 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-浅谈Vue3中watchEffect" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/05/02/%E6%B5%85%E8%B0%88Vue3%E4%B8%ADwatchEffect/">浅谈Vue3中watchEffect</a>
+    </h1>
+  
+
+        
+        <a href="/2022/05/02/%E6%B5%85%E8%B0%88Vue3%E4%B8%ADwatchEffect/" class="archive-article-date">
+  	<time datetime="2022-05-02T18:50:38.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-05-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><code>watchEffect</code>，它立即执行传入的一个函数，同时响应式追踪其依赖，并在其依赖变更时重新运行该函数。</p>
+<p>换句话说：<code>watchEffect</code>相当于将<code>watch</code> 的依赖源和回调函数合并，当任何你有用到的响应式依赖更新时，该回调函数便会重新执行。不同于 <code>watch</code>，<code>watchEffect</code> 的回调函数会被立即执行（即 <code>&#123; immediate: true &#125;</code>）</p>
+<p>此文主要讲述怎样利用<code>清除副作用</code>使我们的代码更加优雅~</p>
+<h2 id="watchEffect的副作用"><a href="#watchEffect的副作用" class="headerlink" title="watchEffect的副作用"></a>watchEffect的副作用</h2><p>什么是副作用（<code>side effect</code>），简单的说副作用就是执行某种操作，如对外部可变数据或变量的修改，外部接口的调用等。<code>watchEffect</code>的回调函数就是一个副作用函数，因为我们使用<code>watchEffect</code>就是侦听到依赖的变化后执行某些操作。</p>
+<p>当执行副作用函数时，它势必会对系统带来一些影响，如在副作用函数里执行了一个定时器<code>setInterval</code>，因此我们必须处理副作用。<br><code>Vue3</code>的<code>watchEffect</code>侦听副作用传入的函数可以接收一个 <code>onInvalidate</code> 函数作为入参，用来注册清理失效时的回调。当以下情况发生时，这个失效回调会被触发：</p>
+<ul>
+<li>副作用即将重新执行时（即依赖的值改变）</li>
+<li>侦听器被停止 (通过显示调用返回值停止侦听，或组件被卸载时隐式调用了停止侦听)</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; watchEffect, ref &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> count = ref(<span class="number">0</span>)</span><br><span class="line">watchEffect(<span class="function">(<span class="params">onInvalidate</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(count.value)</span><br><span class="line">  onInvalidate(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;执行了onInvalidate&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span> &#123;</span><br><span class="line">  count.value++</span><br><span class="line">&#125;, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>上述代码打印的顺序为： <code>0</code> -&gt; <code>执行了onInvalidate，最后执行</code> -&gt; <code>1</code></p>
+<p>分析：初始化时先打印<code>count</code>的值<code>0</code>， 然后由于定时器把<code>count</code>的值更新为<code>1</code>, 此时副作用即将重新执行，因此<code>onInvalidate</code>的回调函数会被触发，打印<code>执行了onInvalidate</code>，然后执行了副作用函数，打印<code>count</code>的值<code>1</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; watchEffect, ref &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> count = ref(<span class="number">0</span>)</span><br><span class="line"><span class="keyword">const</span> stop = watchEffect(<span class="function">(<span class="params">onInvalidate</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(count.value)</span><br><span class="line">  onInvalidate(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;执行了onInvalidate&#x27;</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">()=&gt;</span> &#123;</span><br><span class="line">  stop()</span><br><span class="line">&#125;, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+<p>上述代码：当我们显示执行<code>stop</code>函数停止侦听，此时也会触发<code>onInvalidate</code>的回调函数。同样，<code>watchEffect</code><strong>所在的组件被卸载时</strong>会隐式调用<code>stop</code>函数停止侦听，故也能触发<code>onInvalidate</code>的回调函数。</p>
+<h2 id="watchEffect的应用"><a href="#watchEffect的应用" class="headerlink" title="watchEffect的应用"></a>watchEffect的应用</h2><p>利用<code>watchEffect</code>的非惰性执行，以及传入的<code>onInvalidate</code> 函数，我们可以做什么事情了？</p>
+<p><strong>场景一</strong>：平时我们定义一个定时器，或者监听某个事件，我们需要在<code>mounted</code>生命周期钩子函数内定义或者注册，然后组件销毁之前在<code>beforeUnmount</code>钩子函数里清除定时器或取消监听。这样做我们的逻辑被分散在两个生命周期，不利于维护和阅读。</p>
+<p>如果我利用<code>watchEffect</code>，创造和销毁逻辑放在了一起，此时代码更加优雅易读~</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定时器注册和销毁</span></span><br><span class="line">watchEffect(<span class="function">(<span class="params">onInvalidate</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> timer = <span class="built_in">setInterval</span>(<span class="function">()=&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;, <span class="number">1000</span>)</span><br><span class="line">  onInvalidate(<span class="function">() =&gt;</span> <span class="built_in">clearInterval</span>(timer))</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> handleClick = <span class="function">() =&gt;</span> &#123;</span><br><span class="line"> <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// dom的监听和取消监听</span></span><br><span class="line">onMounted(<span class="function">()=&gt;</span>&#123;</span><br><span class="line">  watchEffect(<span class="function">(<span class="params">onInvalidate</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">document</span>.querySelector(<span class="string">&#x27;.btn&#x27;</span>).addEventListener(<span class="string">&#x27;click&#x27;</span>, handleClick, <span class="literal">false</span>)</span><br><span class="line">    onInvalidate(<span class="function">() =&gt;</span> <span class="built_in">document</span>.querySelector(<span class="string">&#x27;.btn&#x27;</span>).removeEventListener(<span class="string">&#x27;click&#x27;</span>, handleClick))</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>场景二</strong>：利用watchEffect作一个防抖节流（如取消请求）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> id = ref(<span class="number">13</span>)</span><br><span class="line">watchEffect(<span class="function"><span class="params">onInvalidate</span> =&gt;</span> &#123;</span><br><span class="line">   <span class="comment">// 异步请求</span></span><br><span class="line">  <span class="keyword">const</span> token = performAsyncOperation(id.value)</span><br><span class="line">  <span class="comment">// 如果id频繁改变，会触发失效函数，取消之前的接口请求</span></span><br><span class="line">  onInvalidate(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// id has changed or watcher is stopped.</span></span><br><span class="line">    <span class="comment">// invalidate previously pending async operation</span></span><br><span class="line">    token.cancel()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>……</p>
+<p>当然<code>watchEffect</code>还能做很多事情，比如打开一个修改的<code>modal</code>弹窗，如果检测到<code>id</code>变化，我们可以在<code>onInvalidate</code>函数内，重置初始参数…这里只是一个抛砖引玉的作用，望大家多多发掘~</p>
+<p>🚀🚀🚀🚀🚀</p>
+<p>相关阅读：<a target="_blank" rel="noopener" href="https://zqhexor.github.io/2021/07/04/Vue3%E4%B8%ADwatch%E7%9A%84%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">Vue3中watch的最佳实践</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">vue3</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/05/02/%E6%B5%85%E8%B0%88Vue3%E4%B8%ADwatchEffect/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-打造vue2的onePiece环境" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/04/24/%E6%89%93%E9%80%A0vue2%E7%9A%84onePiece%E7%8E%AF%E5%A2%83/">打造vue2的onePiece环境</a>
+    </h1>
+  
+
+        
+        <a href="/2022/04/24/%E6%89%93%E9%80%A0vue2%E7%9A%84onePiece%E7%8E%AF%E5%A2%83/" class="archive-article-date">
+  	<time datetime="2022-04-24T13:27:03.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-04-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言✨"><a href="#前言✨" class="headerlink" title="前言✨"></a>前言✨</h1><p>或许你和我一样习惯了<code>Vue3</code>的写法，体验到使用<code>CompositionAPI</code>抽离<code>hooks</code>的酸爽以及使用<code>&lt;script setup&gt;</code>语法糖的精炼之后，瞬间就会觉得以前<code>Vue2</code>的<code>OptionsAPI</code>不香了，那我们如何在<code>Vue2</code>中使用<code>CompositionAPI</code>了？</p>
+<p>嘻嘻(o゜▽゜)o☆~让我们来开启<code>Vue2</code>中的<code>One Piece</code>吧！🚀</p>
+<h1 id="1️⃣-使用compositionAPI"><a href="#1️⃣-使用compositionAPI" class="headerlink" title="1️⃣ 使用compositionAPI"></a>1️⃣ 使用compositionAPI</h1><p>首先我们先满足基本需求，使用<code>CompositionAPI</code>~</p>
+<p>在命令行中输入以下命令，安装<a target="_blank" rel="noopener" href="https://github.com/vuejs/composition-api">@vue/composition-api</a>：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @vue/composition-api</span><br></pre></td></tr></table></figure>
+<p>在入口文件<code>main.js</code>中，通过<code>Vue.use()</code>注册</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.js</span></span><br><span class="line"><span class="keyword">import</span> CompositionApi <span class="keyword">from</span> <span class="string">&#x27;@vue/composition-api&#x27;</span></span><br><span class="line"></span><br><span class="line">Vue.use(CompositionApi)</span><br></pre></td></tr></table></figure>
+<p>接下来，我们就可以使用<code>CompositionAPI</code>了</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">import</span> HelloWorld <span class="keyword">from</span> <span class="string">&#x27;@/components/HelloWorld.vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; ref &#125; <span class="keyword">from</span> <span class="string">&#x27;@vue/composition-api&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  components: &#123;</span><br><span class="line">    HelloWorld</span><br><span class="line">  &#125;,</span><br><span class="line">  props:&#123;</span><br><span class="line">    value: &#123;</span><br><span class="line">      type: <span class="built_in">String</span>,</span><br><span class="line">      <span class="keyword">default</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  setup(props， ctx) &#123;</span><br><span class="line">    <span class="keyword">const</span> name = ref(<span class="string">&#x27;小松菜奈&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      name</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="2️⃣-使用script-setup语法糖"><a href="#2️⃣-使用script-setup语法糖" class="headerlink" title="2️⃣ 使用script setup语法糖"></a>2️⃣ 使用script setup语法糖</h1><blockquote>
+<p><code>&lt;script setup&gt;</code> 声明的顶层的绑定 (包括变量，函数声明，以及 import 引入的内容) 都能在模板中直接使用，即变量、函数无需返回，组件无需注册</p>
+</blockquote>
+<p>既然<code>&lt;script setup&gt;</code>语法糖这么香，咱还等什么，立即行动~</p>
+<p>在命令行中输入以下命令，安装<a target="_blank" rel="noopener" href="https://github.com/antfu/unplugin-vue2-script-setup">unplugin-vue2-script-setup</a>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i unplugin-vue2-script-setup -D</span><br></pre></td></tr></table></figure>
+
+<p>如果咱们使用的是<code>vue-cli</code>，则需在<code>vue.config.js</code>中加上如下配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; vue.config.js</span><br><span class="line">const ScriptSetup &#x3D; require(&#39;unplugin-vue2-script-setup&#x2F;webpack&#39;).default</span><br><span class="line"></span><br><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  parallel: false,  &#x2F;&#x2F; disable thread-loader, which is not compactible with this plugin</span><br><span class="line">  configureWebpack: &#123;</span><br><span class="line">    plugins: [</span><br><span class="line">      ScriptSetup(&#123; &#x2F;* options *&#x2F; &#125;),</span><br><span class="line">    ],</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>vite</code>、<code>webpack</code>等更多配置，请查看<a target="_blank" rel="noopener" href="https://github.com/antfu/unplugin-vue2-script-setup">unplugin-vue2-script-setup</a> ~</p>
+<p>使用了<code>&lt;script setup&gt;</code>语法糖后，代码就是如此简洁：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line"><span class="keyword">import</span> HelloWorld <span class="keyword">from</span> <span class="string">&#x27;@/components/HelloWorld.vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; ref &#125; <span class="keyword">from</span> <span class="string">&#x27;@vue/composition-api&#x27;</span></span><br><span class="line"><span class="keyword">const</span> props = defineProps(&#123;</span><br><span class="line">  value: &#123;</span><br><span class="line">    type: <span class="built_in">String</span>,</span><br><span class="line">    <span class="keyword">default</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">const</span> name = ref(<span class="string">&#x27;小松菜奈&#x27;</span>)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><code>defineProps</code>、<code>defineEmits</code>、<code>defineExpose</code>是只在 <code>&lt;script setup&gt;</code> 中才能使用的<strong>编译器宏</strong>，他们不需要导入且会随着 <code>&lt;script setup&gt;</code> 处理过程一同被编译掉。</p>
+</blockquote>
+<p>因此，我们在使用这三个api时不需要导入，但是<code>eslint</code>却不知道。故我们需要在<code>eslintrc.js</code>中作如下配置，消除<code>eslint(no-undef)</code>提示：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .eslintrc.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">   globals: &#123;</span><br><span class="line">    defineProps: <span class="string">&#x27;readonly&#x27;</span>,</span><br><span class="line">    defineEmits: <span class="string">&#x27;readonly&#x27;</span>,</span><br><span class="line">    defineExpose: <span class="string">&#x27;readonly&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>可能你的eslint会出现如下提示:</li>
+</ul>
+<p><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b80b8d6b638b410ba3f2243976e40069~tplv-k3u1fbpfcp-watermark.image" alt="image.png"></p>
+<p>我们可以在<code>.eslintrc.js</code>中的<code>rules</code>作如下配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .eslintrc.js</span></span><br><span class="line">  rules: &#123;</span><br><span class="line">    <span class="string">&#x27;no-unused-vars&#x27;</span>: [</span><br><span class="line">      <span class="string">&#x27;error&#x27;</span>,</span><br><span class="line">      <span class="comment">// Allowed unused vars must match /^__/u  no-unused-vars</span></span><br><span class="line">      &#123; <span class="attr">varsIgnorePattern</span>: <span class="string">&#x27;^__&#x27;</span>, <span class="attr">args</span>: <span class="string">&#x27;none&#x27;</span> &#125; </span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>如果你是使用<code>ts</code>的话，参考下尤大的配置：<a target="_blank" rel="noopener" href="https://github.com/vuejs/vue-next/blob/master/.eslintrc.js">.eslintrc.js</a></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// .eslintrc.js</span></span><br><span class="line">  rules: &#123;</span><br><span class="line">    <span class="string">&#x27;no-unused-vars&#x27;</span>: [</span><br><span class="line">      <span class="string">&#x27;error&#x27;</span>,</span><br><span class="line">      <span class="comment">// we are only using this rule to check for unused arguments since TS</span></span><br><span class="line">      <span class="comment">// catches unused variables but not args</span></span><br><span class="line">      &#123; <span class="attr">varsIgnorePattern</span>: <span class="string">&#x27;.*&#x27;</span>, <span class="attr">args</span>: <span class="string">&#x27;none&#x27;</span> &#125;   </span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li>在<code>Vue2</code>项目中使用<code>Volar</code>插件<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i @vue/runtime-dom -D</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// jsconfig.json</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;vueCompilerOptions&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;experimentalCompatMode&quot;</span>: <span class="number">2</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="3️⃣-从compositionAPI中自动导入所需api（可选）"><a href="#3️⃣-从compositionAPI中自动导入所需api（可选）" class="headerlink" title="3️⃣ 从compositionAPI中自动导入所需api（可选）"></a>3️⃣ 从compositionAPI中自动导入所需api（可选）</h1><p>使用<a target="_blank" rel="noopener" href="https://github.com/antfu/unplugin-auto-import"><code>unplugin-auto-import</code></a>，能帮助我们从<code>compositionAPI</code>中自动按需导入所需的API，如<code>ref</code>、<code>reactive</code>等。</p>
+<p>这个插件不是必须的，但是能帮我们提高编码效率，使用后，我们的代码可以简化成：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;script setup&gt;</span><br><span class="line"><span class="keyword">import</span> HelloWorld <span class="keyword">from</span> <span class="string">&#x27;@/components/HelloWorld.vue&#x27;</span></span><br><span class="line"><span class="comment">// import &#123; ref &#125; from &#x27;@vue/composition-api&#x27; // 无需导入，自动按需使用</span></span><br><span class="line"><span class="keyword">const</span> props = defineProps(&#123;</span><br><span class="line">  value: &#123;</span><br><span class="line">    type: <span class="built_in">String</span>,</span><br><span class="line">    <span class="keyword">default</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">const</span> name = ref(<span class="string">&#x27;小松菜奈&#x27;</span>)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>通过以下命令安装此插件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i -D unplugin-auto-import</span><br></pre></td></tr></table></figure>
+<p>在<code>vue.config.js</code>中加上如下配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vue.config.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> AutoImport = <span class="built_in">require</span>(<span class="string">&#x27;unplugin-auto-import/webpack&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    configureWebpack: &#123;</span><br><span class="line">      plugins: [</span><br><span class="line">        AutoImport(&#123;</span><br><span class="line">          imports: [<span class="string">&#x27;@vue/composition-api&#x27;</span>], <span class="comment">// auto import apis from &#x27;@vue/composition-api&#x27;</span></span><br><span class="line">          <span class="comment">// Generate corresponding .eslintrc-auto-import.json file</span></span><br><span class="line">          eslintrc: &#123;</span><br><span class="line">            enabled: <span class="literal">true</span>, <span class="comment">// Default `false`, true开启</span></span><br><span class="line">            filepath: <span class="string">&#x27;./.eslintrc-auto-import.json&#x27;</span>, </span><br><span class="line">            globalsPropValue: <span class="literal">true</span> <span class="comment">// Default `true`</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>解释一下上面eslintrc的配置项：</p>
+<ul>
+<li><code>enabled</code>：可以是(true | false），是否开启自动生成自适应的全局变量配置文件</li>
+<li><code>filepath</code>： 配置自动生成的<code>eslint</code>全局变量的json文件路径</li>
+<li><code>globalsPropValue</code>： 生成的全局变量的可访问性，可以是(true | false | ‘readonly’ | ‘readable’ | ‘writable’ | ‘writeable’)中的一种，布尔值 <code>false</code> 和字符串值 <code>&quot;readable&quot;</code> 等价于 <code>&quot;readonly&quot;</code>。类似地，布尔值 <code>true</code> 和字符串值 <code>&quot;writeable&quot;</code> 等价于 <code>&quot;writable&quot;</code>。</li>
+</ul>
+<p>根据上面的配置，在我们启动工程时，工程会在<code>src</code>目录下自动生成一份名叫<code>.eslintrc-auto-import.json</code>的全局变量配置文件，然后我们在<code>.eslintrc.js</code>配置文件中引入这个配置文件，即可消除<code>eslint</code>的对当前页未引入的全局变量的<code>eslint(no-undef)</code>提示。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; .eslintrc.js</span><br><span class="line"></span><br><span class="line">module.exports &#x3D; &#123;</span><br><span class="line">  &#x2F;* ... *&#x2F;</span><br><span class="line">  extends: [</span><br><span class="line">    &#x2F;&#x2F; ...</span><br><span class="line">    &#39;.&#x2F;.eslintrc-auto-import.json&#39;,</span><br><span class="line">  ],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然这个插件<a target="_blank" rel="noopener" href="https://github.com/antfu/unplugin-auto-import"><code>unplugin-auto-import</code></a>能帮助我们提高效率的方式远非如此，比如自动引入其他的类库，详见<a target="_blank" rel="noopener" href="https://github.com/antfu/unplugin-auto-import">unplugin-auto-import</a> ~</p>
+<p>🎉🎉🎉🎉🎉</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">vue2</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/04/24/%E6%89%93%E9%80%A0vue2%E7%9A%84onePiece%E7%8E%AF%E5%A2%83/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-CompositionAPI如何优雅封装第三方组件" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2022/04/11/CompositionAPI%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%B0%81%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E7%BB%84%E4%BB%B6/">Composition API如何优雅封装第三方组件</a>
+    </h1>
+  
+
+        
+        <a href="/2022/04/11/CompositionAPI%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%B0%81%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E7%BB%84%E4%BB%B6/" class="archive-article-date">
+  	<time datetime="2022-04-11T01:03:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-04-11</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言✨"><a href="#前言✨" class="headerlink" title="前言✨"></a>前言✨</h1><p>对于第三方组件，如何在保持<code>第三方组件</code>原有功能（属性<code>props</code>、事件<code>events</code>、插槽<code>slots</code>、方法<code>methods</code>）的基础上，优雅地进行功能的扩展了？</p>
+<p>以<a target="_blank" rel="noopener" href="https://element-plus.gitee.io/zh-CN/"><code>Element Plus</code></a>的<a target="_blank" rel="noopener" href="https://element-plus.gitee.io/zh-CN/component/input.html#input-%E5%B1%9E%E6%80%A7"><code>el-input</code></a>为例：</p>
+<p>很有可能你以前是这样玩的，封装一个MyInput组件，把要使用的属性<code>props</code>、事件<code>events</code>和插槽<code>slots</code>、方法<code>methods</code>根据自己的需要再写一遍：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyInput.vue</span></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;my-input&quot;</span>&gt;</span><br><span class="line">    &lt;el-input v-model=<span class="string">&quot;inputVal&quot;</span> :clearable=<span class="string">&quot;clearable&quot;</span> @clear=<span class="string">&quot;clear&quot;</span>&gt;</span><br><span class="line">    &lt;template #prefix&gt;</span><br><span class="line">      &lt;slot name=<span class="string">&quot;prefix&quot;</span>&gt;&lt;/slot&gt;</span><br><span class="line">    &lt;/template&gt;</span><br><span class="line">      &lt;template #suffix&gt;</span><br><span class="line">      &lt;slot name=<span class="string">&quot;suffix&quot;</span>&gt;&lt;/slot&gt;</span><br><span class="line">    &lt;/template&gt;</span><br><span class="line">    &lt;/el-input&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script setup&gt;</span><br><span class="line"><span class="keyword">import</span> &#123; computed &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">const</span> props = defineProps(&#123;</span><br><span class="line">  modelValue: &#123;</span><br><span class="line">    type: <span class="built_in">String</span>,</span><br><span class="line">    <span class="keyword">default</span>: <span class="string">&#x27;&#x27;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  clearable: &#123;</span><br><span class="line">    type: <span class="built_in">Boolean</span>,</span><br><span class="line">    <span class="keyword">default</span>: <span class="literal">false</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">const</span> emits = defineEmits([<span class="string">&#x27;update:modelValue&#x27;</span>, <span class="string">&#x27;clear&#x27;</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> inputVal = computed(&#123;</span><br><span class="line">  get: <span class="function">() =&gt;</span> props.modelValue,</span><br><span class="line">  set: <span class="function">(<span class="params">val</span>) =&gt;</span> &#123;</span><br><span class="line">    emits(<span class="string">&#x27;update:modelValue&#x27;</span>, val)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> clear = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  emits(<span class="string">&#x27;clear&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>可过一段时间后，需求变更，又要在MyInput组件上添加el-input组件的其它功能，可el-input组件总共有20个多属性，5个事件，4个插槽，那该怎么办呢，难道一个个传进去，这样不仅繁琐而且可读性差。</p>
+<p>在Vue2中，我们可以这样处理，点击此处查看<a target="_blank" rel="noopener" href="https://juejin.cn/post/6943534547501858824#heading-4"><code>红尘炼心</code>大神的文章</a>。</p>
+<p>此文诣在帮助大家做一个知识的迁移，探究如何使用<code>Vue3 CompositionAPI</code>优雅地封装第三方组件~</p>
+<h1 id="一、对于第三方组件的属性props、事件events"><a href="#一、对于第三方组件的属性props、事件events" class="headerlink" title="一、对于第三方组件的属性props、事件events"></a>一、对于第三方组件的属性<code>props</code>、事件<code>events</code></h1><p>在<code>Vue2</code>中</p>
+<ul>
+<li><code>$attrs</code>: 包含了父作用域中不作为 <code>prop</code> 被识别 (且获取) 的 attribute 绑定 (class 和 style 除外)。当一个组件没有声明任何<code>prop</code> 时，这里会包含所有父作用域的绑定 (class 和 style 除外)，并且可以通过 <code>v-bind=&quot;$attrs&quot;</code> 传入内部组件</li>
+<li><code>$listeners</code>:包含了父作用域中的 (不含 <code>.native</code> 修饰器的) <code>v-on</code> 事件监听器。它可以通过 <code>v-on=&quot;$listeners&quot;</code> 传入内部组件</li>
+</ul>
+<p>而在<code>Vue3</code>中</p>
+<ul>
+<li><code>$attrs</code>:包含了父作用域中不作为组件 <a target="_blank" rel="noopener" href="https://v3.cn.vuejs.org/api/options-data.html#props">props</a> 或<a target="_blank" rel="noopener" href="https://v3.cn.vuejs.org/api/options-data.html#emits">自定义事件</a>的 attribute 绑定和事件（包括 <code>class</code> 和 <code>style</code>和<code>自定义事件</code>），同时可以通过 <code>v-bind=&quot;$attrs&quot;</code> 传入内部组件。</li>
+<li><code>$listeners</code> 对象在 Vue 3 中已被移除。事件监听器现在是 <code>$attrs</code> 的一部分。</li>
+<li>在 <code>&lt;script setup&gt;</code>中辅助函数<code>useAttrs</code>可以获取到<code>$attrs</code>。<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//MyInput.vue </span></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;my-input&quot;</span>&gt;</span><br><span class="line">    &lt;el-input v-bind=<span class="string">&quot;attrs&quot;</span>&gt;&lt;/el-input&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script setup&gt;</span><br><span class="line"><span class="keyword">import</span> &#123; useAttrs &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">const</span> attrs = useAttrs()</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+当然，这样还不够。光这样写，我们绑定的属性（包括 <code>class</code> 和 <code>style</code>）同时会在根元素（上面的例子是<code>class=&quot;my-input&quot;</code>的Dom节点）上起作用。要阻止这个默认行为，我们需要设置<code>inheritAttrs</code>为<code>false</code>。</li>
+</ul>
+<p>下面我们来看看Vue3文档对<code>inheritAttrs</code>的解释</p>
+<blockquote>
+<p>默认情况下父作用域的不被认作 props 的 attribute 绑定 (attribute bindings) 将会“回退”且作为普通的 HTML attribute 应用在子组件的根元素上。当撰写包裹一个目标元素或另一个组件的组件时，这可能不会总是符合预期行为。通过设置 <code>inheritAttrs</code> 到 <code>false</code>，这些默认行为将会被去掉。而通过实例 property <code>$attrs</code> 可以让这些 attribute 生效，且可以通过 <code>v-bind</code> 显性的绑定到非根元素上。</p>
+</blockquote>
+<p>于是，我们对于第三方组件的属性<code>props</code>、事件<code>events</code>处理，可以写成如下代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyInput.vue </span></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;my-input&quot;</span>&gt;</span><br><span class="line">    &lt;el-input v-bind=<span class="string">&quot;attrs&quot;</span>&gt;&lt;/el-input&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  name: <span class="string">&#x27;MyInput&#x27;</span>,</span><br><span class="line">  inheritAttrs: <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;script setup&gt;</span><br><span class="line"><span class="keyword">import</span> &#123; useAttrs &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">const</span> attrs = useAttrs()</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h1 id="二、对于第三方组件的插槽slots"><a href="#二、对于第三方组件的插槽slots" class="headerlink" title="二、对于第三方组件的插槽slots"></a>二、对于第三方组件的插槽<code>slots</code></h1><p><code>Vue3</code>中</p>
+<ul>
+<li><code>$slots</code>：我们可以通过其拿到父组件传入的插槽</li>
+<li><code>Vue3</code>中移除了<code>$scopedSlots</code>，所有插槽都通过 <code>$slots</code> 作为函数暴露</li>
+<li>在 <code>&lt;script setup&gt;</code>中辅助函数<code>useSlots</code>可以获取到<code>$slots</code>。</li>
+</ul>
+<p>基于以上几点，<strong>如果我们对于第三方组件的封装没有增加额外的插槽，且第三方组件的插槽处于同一个dom节点之中</strong>，我们也有一种取巧的封装方式😎, 通过遍历<code>$slots</code>拿到插槽的name，动态添加子组件的插槽：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//MyInput.vue </span></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;my-input&quot;</span>&gt;</span><br><span class="line">    &lt;el-input v-bind=<span class="string">&quot;attrs&quot;</span>&gt;</span><br><span class="line">      &lt;template v-for=&quot;k in Object.keys(slots)&quot; #[k] :key=&quot;k&quot;&gt;</span><br><span class="line">        &lt;slot :name=<span class="string">&quot;k&quot;</span>&gt;&lt;/slot&gt;</span><br><span class="line">      &lt;/template&gt;</span><br><span class="line">    &lt;/el-input&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  name: <span class="string">&#x27;MyInput&#x27;</span>,</span><br><span class="line">  inheritAttrs: <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;script setup&gt;</span><br><span class="line"><span class="keyword">import</span> &#123; useAttrs, useSlots &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">const</span> attrs = useAttrs()</span><br><span class="line"><span class="keyword">const</span> slots = useSlots()</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>如果不满足以上条件的话，咱还得老老实实在子组件中手动添加需要的第三方组件的插槽~</p>
+<h1 id="三、对于第三方组件的方法methods"><a href="#三、对于第三方组件的方法methods" class="headerlink" title="三、对于第三方组件的方法methods"></a>三、对于第三方组件的方法<code>methods</code></h1><p>对于第三方组件的方法，我们通过<code>ref</code>来实现。首先在MyInput组件中的el-input组件上添加一个<code>ref=&quot;elInputRef&quot;</code>属性，然后通过<code>defineExpose</code>把<code>elInputRef</code>暴露出去给父组件调用。</p>
+<p>子组件：<code>MyInput.vue</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MyInput.vue </span></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">&quot;my-input&quot;</span>&gt;</span><br><span class="line">    &lt;el-input v-bind=<span class="string">&quot;attrs&quot;</span> ref=<span class="string">&quot;elInputRef&quot;</span>&gt;</span><br><span class="line">      &lt;template v-for=&quot;k in Object.keys(slots)&quot; #[k] :key=&quot;k&quot;&gt;</span><br><span class="line">        &lt;slot :name=<span class="string">&quot;k&quot;</span>&gt;&lt;/slot&gt;</span><br><span class="line">      &lt;/template&gt;</span><br><span class="line">    &lt;/el-input&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  name: <span class="string">&#x27;MyInput&#x27;</span>,</span><br><span class="line">  inheritAttrs: <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;script setup&gt;</span><br><span class="line"><span class="keyword">import</span> &#123; useAttrs, useSlots &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">const</span> attrs = useAttrs()</span><br><span class="line"><span class="keyword">const</span> slots = useSlots()</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> elInputRef = ref(<span class="literal">null</span>)</span><br><span class="line">defineExpose(&#123;</span><br><span class="line">  elInputRef  <span class="comment">// &lt;script setup&gt;的组件里的属性默认是关闭的，需通过defineExpose暴露出去才能被调用</span></span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>父页面：<code>Index.vue</code>的调用代码如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Index.vue </span></span><br><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;my-input v-model=<span class="string">&#x27;input&#x27;</span> ref=<span class="string">&quot;myInput&quot;</span>&gt;</span><br><span class="line">    &lt;template #prefix&gt;姓名&lt;/template&gt;</span><br><span class="line">  &lt;/my-input&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line">&lt;script setup&gt;</span><br><span class="line"><span class="keyword">import</span> MyInput <span class="keyword">from</span> <span class="string">&#x27;./components/MyInput.vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; ref, onMounted &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">const</span> input = ref(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myInput = ref(<span class="literal">null</span>) <span class="comment">// 组件实例</span></span><br><span class="line">onMounted(<span class="function">()=&gt;</span> &#123;</span><br><span class="line">  myInput.value.elInputRef.focus() <span class="comment">// 初始化时调用elInputRef实例的focus方法</span></span><br><span class="line">&#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>🎉🎉🎉🎉🎉🎉</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">vue3</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2022/04/11/CompositionAPI%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%B0%81%E8%A3%85%E7%AC%AC%E4%B8%89%E6%96%B9%E7%BB%84%E4%BB%B6/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-docker发布一个springboot工程" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1268,143 +1618,10 @@
 
 
   
-    <article id="post-闲暇的生活" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/08/17/%E9%97%B2%E6%9A%87%E7%9A%84%E7%94%9F%E6%B4%BB/">闲暇的生活</a>
-    </h1>
-  
-
-        
-        <a href="/2020/08/17/%E9%97%B2%E6%9A%87%E7%9A%84%E7%94%9F%E6%B4%BB/" class="archive-article-date">
-  	<time datetime="2020-08-17T10:22:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="拥抱山间的清泉和峡谷的风-那是多幸福的一件事啊"><a href="#拥抱山间的清泉和峡谷的风-那是多幸福的一件事啊" class="headerlink" title="拥抱山间的清泉和峡谷的风,那是多幸福的一件事啊!"></a>拥抱山间的清泉和峡谷的风,那是多幸福的一件事啊!</h3>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/08/17/%E9%97%B2%E6%9A%87%E7%9A%84%E7%94%9F%E6%B4%BB/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/16/hello-world/">Hello World, HexOr!</a>
-    </h1>
-  
-
-        
-        <a href="/2020/06/16/hello-world/" class="archive-article-date">
-  	<time datetime="2020-06-16T10:22:01.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-16</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/06/16/hello-world/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+    </nav>
   
 
 
