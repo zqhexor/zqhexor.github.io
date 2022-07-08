@@ -1,2 +1,2 @@
 # zqhexor.github.io
-my first blog
+my blog(https://zqhexor.github.io/)
